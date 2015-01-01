@@ -105,6 +105,15 @@ type Action struct {
 	App    string `json:"app"`
 }
 
+type TaskQueue struct {
+	App   string `json:"app"`
+	Delay *Delay `json:"delay"`
+}
+
+type Delay struct {
+	Overdue bool `json:"overdue"`
+}
+
 // HealthCheck is described here:
 // https://mesosphere.github.io/marathon/docs/health-checks.html
 type HealthCheck struct {
@@ -155,4 +164,5 @@ type response struct {
 	Tasks        []*Task        `json:"tasks,omitempty"`
 	Task         *Task          `json:"task,omitempty"`
 	CallbackUrls []string       `json:"callbackUrls,omitempty"`
+	Queue        []*TaskQueue   `json:"queue,omitempty"`
 }
