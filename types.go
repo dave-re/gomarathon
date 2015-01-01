@@ -154,4 +154,5 @@ type response struct {
 	Version      string         `json:"versoin,omitempty"`
 	Tasks        []*Task        `json:"tasks,omitempty"`
 	Task         *Task          `json:"task,omitempty"`
+	CallbackUrls []string       `json:"callbackUrls,omitempty"`
 }
