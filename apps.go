@@ -5,79 +5,127 @@ import (
 	"net/http"
 )
 
-const (
-	rootPath = "apps"
-)
-
 func (c *Client) CreateApp(app *Application) (resApp *Application, err error) {
 	options := &RequestOptions{
-		Path:   rootPath,
+		Path:   "apps",
 		Datas:  app,
 		Method: "POST",
 	}
-	err = c.unmarshalJson(options, http.StatusCreated, resApp)
+	err = c.unmarshalJSON(options, http.StatusCreated, resApp)
 	return
 }
 
-func (c *Client) GetApps() (*ResponseApps, error) {
+func (c *Client) GetApps() ([]*Application, error) {
 	return c.GetAppsWithParams(nil)
 }
 
-func (c *Client) GetAppsWithParams(params *Parameters) (resApps *ResponseApps, err error) {
+func (c *Client) GetAppsWithParams(params *Parameters) (apps []*Application, err error) {
 	options := &RequestOptions{
-		Path:   rootPath,
+		Path:   "apps",
 		Method: "GET",
 		Params: params,
 	}
-	err = c.unmarshalJson(options, http.StatusOK, resApps)
+	resp := &response{}
+	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	apps = resp.Apps
 	return
 }
 
-func (c *Client) GetApp(appID string) (resApp *ResponseApp, err error) {
+func (c *Client) GetApp(appID string) (app *Application, err error) {
 	options := &RequestOptions{
-		Path:   fmt.Sprintf("%s/%s", rootPath, appID),
+		Path:   fmt.Sprintf("apps/%s", appID),
 		Method: "GET",
 	}
-	err = c.unmarshalJson(options, http.StatusOK, resApp)
+	resp := &response{}
+	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	app = resp.App
 	return
 }
 
-func (c *Client) GetAppVersions(appID string) (resVersions *ResponseVersions, err error) {
+func (c *Client) GetAppVersions(appID string) (versions []string, err error) {
 	options := &RequestOptions{
-		Path:   fmt.Sprintf("%s/%s/versions", rootPath, appID),
+		Path:   fmt.Sprintf("apps/%s/versions", appID),
 		Method: "GET",
 	}
-	err = c.unmarshalJson(options, http.StatusOK, resVersions)
+	resp := &response{}
+	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	versions = resp.Versions
 	return
 }
 
-func (c *Client) GetAppByVersion(appID, version string) (resApp *Application, err error) {
+func (c *Client) GetAppByVersion(appID, version string) (app *Application, err error) {
 	options := &RequestOptions{
-		Path:   fmt.Sprintf("%s/%s/versions/%s", rootPath, appID, version),
+		Path:   fmt.Sprintf("apps/%s/versions/%s", appID, version),
 		Method: "GET",
 	}
-	err = c.unmarshalJson(options, http.StatusOK, resApp)
+	err = c.unmarshalJSON(options, http.StatusOK, app)
 	return
 }
 
-func (c *Client) UpdateApp(appID string, app *Application) (resAppInfo *ResponseAppInfo, err error) {
+func (c *Client) UpdateApp(appID string, app *Application) (deploymentID, version string, err error) {
 	return c.UpdateAppWithParams(appID, app, nil)
 }
 
-func (c *Client) UpdateAppWithParams(appID string, app *Application, params *Parameters) (resAppInfo *ResponseAppInfo, err error) {
+func (c *Client) UpdateAppWithParams(appID string, app *Application, params *Parameters) (deploymentID, version string, err error) {
 	options := &RequestOptions{
-		Path:   fmt.Sprintf("%s/%s", rootPath, appID),
+		Path:   fmt.Sprintf("apps/%s", appID),
 		Method: "PUT",
 		Params: params,
 	}
-	err = c.unmarshalJson(options, http.StatusOK, resAppInfo)
+	resp := &response{}
+	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	deploymentID = resp.DeploymentID
+	version = resp.Version
 	return
 }
 
 func (c *Client) DestroyApp(appID string) error {
 	options := &RequestOptions{
-		Path:   fmt.Sprintf("%s/%s", rootPath, appID),
+		Path:   fmt.Sprintf("apps/%s", appID),
 		Method: "DELETE",
 	}
 	return c.requestAndCheckSucc(options, http.StatusNoContent)
+}
+
+func (c *Client) GetAppTasks(appID string) (tasks []*Task, err error) {
+	options := &RequestOptions{
+		Path:   fmt.Sprintf("apps/%s/tasks", appID),
+		Method: "GET",
+	}
+	resp := &response{}
+	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	tasks = resp.Tasks
+	return
+}
+
+func (c *Client) KillTasksWithParams(appID string, params *Parameters) (tasks []*Task, err error) {
+	options := &RequestOptions{
+		Path:   fmt.Sprintf("apps/%s/tasks", appID),
+		Method: "DELETE",
+		Params: params,
+	}
+	resp := &response{}
+	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	tasks = resp.Tasks
+	return
+}
+
+func (c *Client) KillTasks(appID string) (tasks []*Task, err error) {
+	return c.KillTasksWithParams(appID, nil)
+}
+
+func (c *Client) KillTaskWithParams(appID, taskID string, params *Parameters) (task *Task, err error) {
+	options := &RequestOptions{
+		Path:   fmt.Sprintf("apps/%s/tasks/%s", appID, taskID),
+		Method: "DELETE",
+		Params: params,
+	}
+	resp := &response{}
+	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	task = resp.Task
+	return
+}
+
+func (c *Client) KillTask(appID, taskID string) (task *Task, err error) {
+	return c.KillTaskWithParams(appID, taskID, nil)
 }

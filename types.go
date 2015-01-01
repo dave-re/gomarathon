@@ -123,19 +123,12 @@ func (e Embed) String() string {
 	return ""
 }
 
-type ResponseApps struct {
-	Apps []*Application `json:"apps"`
-}
-
-type ResponseApp struct {
-	App *Application `json:"app"`
-}
-
-type ResponseVersions struct {
-	Versions []string `json:"versions"`
-}
-
-type ResponseAppInfo struct {
-	DeploymentID string   `json:"deploymentId"`
-	Versions     []string `json:"versions"`
+type response struct {
+	Apps         []*Application `json:"apps,omitempty"`
+	App          *Application   `json:"app,omitempty"`
+	Versions     []string       `json:"versions,omitempty"`
+	DeploymentID string         `json:"deploymentId,omitempty"`
+	Version      string         `json:"versoin,omitempty"`
+	Tasks        []*Task        `json:"tasks,omitempty"`
+	Task         *Task          `json:"task,omitempty"`
 }

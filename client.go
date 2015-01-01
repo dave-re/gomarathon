@@ -105,7 +105,7 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 	return c.do(options.Method, path, options.Datas)
 }
 
-func (c *Client) unmarshalJson(options *RequestOptions, successCode int, v interface{}) error {
+func (c *Client) unmarshalJSON(options *RequestOptions, successCode int, v interface{}) error {
 	data, code, err := c.request(options)
 	if err != nil {
 		return err
