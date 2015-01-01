@@ -99,6 +99,10 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 			v.Set("cmd", url.QueryEscape(options.Params.Cmd))
 		}
 
+		if options.Params.Force {
+			v.Set("force", "true")
+		}
+
 		path = fmt.Sprintf("%s?%s", path, v.Encode())
 	}
 

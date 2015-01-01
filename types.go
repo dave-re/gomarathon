@@ -15,6 +15,7 @@ type Parameters struct {
 	Scale       bool
 	CallbackURL string
 	Embed       Embed
+	Force       bool
 }
 
 // Application marathon application see :
@@ -42,6 +43,15 @@ type Application struct {
 	UpgradeStrategy *UpgradeStrategy  `json:"upgradeStrategy,omitempty"`
 	Version         string            `json:"version,omitempty"`
 	Tasks           []*Task           `json:"tasks,omitempty"`
+}
+
+type Group struct {
+	ID           string         `json:"id,omitempty"`
+	Dependencies []string       `json:"dependencies,omitempty"`
+	Apps         []*Application `json:"apps,omitempty"`
+	Groups       []*Group       `json:"groups,omitempty"`
+	Version      string         `json:"version,omitempty"`
+	ScaleBy      float64        `json:"scaleBy,omitempty"`
 }
 
 // Task is described here:

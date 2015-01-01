@@ -69,6 +69,7 @@ func (c *Client) UpdateApp(appID string, app *Application) (deploymentID, versio
 func (c *Client) UpdateAppWithParams(appID string, app *Application, params *Parameters) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s", appID),
+		Datas:  app,
 		Method: "PUT",
 		Params: params,
 	}
