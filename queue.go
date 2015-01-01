@@ -10,7 +10,7 @@ func (c *Client) GetTaskQueue() (queue []*TaskQueue, err error) {
 		Method: "GET",
 	}
 	resp := &response{}
-	err = c.unmarshalJSON(options, []int{http.StatusCreated}, resp)
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
 	queue = resp.Queue
 	return
 }

@@ -132,7 +132,58 @@ type Command struct {
 }
 
 type UpgradeStrategy struct {
-	MinimumHealthCapacity float64 `json:"minimumHealthCapacity"`
+	MinimumHealthCapacity float64 `json:"minimumHealthCapacity,omitempty"`
+}
+
+type ServerInfo struct {
+	FrameworkID     string           `json:"frameworkId,omitempty"`
+	Leader          string           `json:"leader,omitempty"`
+	HTTPConfig      *HTTPConfig      `json:"http_config,omitempty"`
+	EventSubscriber *EventSubscriber `json:"event_subscriber,omitempty"`
+	MarathonConfig  *MarathonConfig  `json:"marathon_config,omitempty"`
+	Name            string           `json:"name,omitempty"`
+	Version         string           `json:"version,omitempty"`
+	ZookeeperConfig *ZookeeperConfig `json:"zookeeper_config,omitempty"`
+}
+
+type HTTPConfig struct {
+	AssetsPath string `json:"assets_path,omitempty"`
+	HTTPPort   int    `json:"http_port,omitempty"`
+	HTTPSPort  int    `json:"https_port,omitempty"`
+}
+
+type EventSubscriber struct {
+	Type          string   `json:"type,omitempty"`
+	HTTPEndpoints []string `json:"http_endpoints,omitempty"`
+}
+
+type MarathonConfig struct {
+	Checkpoint                 bool   `json:"checkpoint,omitempty"`
+	Executor                   string `json:"executor,omitempty"`
+	FailoverTimeout            int    `json:"failover_timeout,omitempty"`
+	HA                         bool   `json:"ha,omitempty"`
+	Hostname                   string `json:"hostname,omitempty"`
+	LocalPortMax               int    `json:"local_port_max,omitempty"`
+	LocalPortMin               int    `json:"local_port_min,omitempty"`
+	Master                     string `json:"master,omitempty"`
+	MesosRole                  string `json:"mesos_role,omitempty"`
+	MesosUser                  string `json:"mesos_user,omitempty"`
+	ReconciliationInitialDelay int    `json:"reconciliation_initial_delay,omitempty"`
+	ReconciliationInterval     int    `json:"reconciliation_interval,omitempty"`
+	TaskLaunchTimeout          int    `json:"task_launch_timeout,omitempty"`
+}
+
+type ZookeeperConfig struct {
+	ZK              string           `json:"zk,omitempty"`
+	ZKFutureTimeout *ZKFutureTimeout `json:"zk_future_timeout,omitempty"`
+	ZKHosts         string           `json:"zk_hosts,omitempty"`
+	ZKPath          string           `json:"zk_path,omitempty"`
+	ZKState         string           `json:"zk_state,omitempty"`
+	ZKTimeout       int              `json:"zk_timeout,omitempty"`
+}
+
+type ZKFutureTimeout struct {
+	Duration int `json:"duration,omitempty"`
 }
 
 type Embed int
