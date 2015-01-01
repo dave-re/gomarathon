@@ -109,12 +109,12 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 	return c.do(options.Method, path, options.Datas)
 }
 
-func (c *Client) unmarshalJSON(options *RequestOptions, successCode int, v interface{}) error {
+func (c *Client) unmarshalJSON(options *RequestOptions, successCodes []int, v interface{}) error {
 	data, code, err := c.request(options)
 	if err != nil {
 		return err
 	}
-	if successCode != code {
+	if !containsCode(successCodes, code) {
 		return fmt.Errorf("%d: %s", code, data)
 	}
 	if err := json.Unmarshal(data, &v); err != nil {
@@ -123,13 +123,22 @@ func (c *Client) unmarshalJSON(options *RequestOptions, successCode int, v inter
 	return nil
 }
 
-func (c *Client) requestAndCheckSucc(options *RequestOptions, successCode int) error {
+func (c *Client) requestAndCheckSucc(options *RequestOptions, successCodes []int) error {
 	_, code, err := c.request(options)
 	if err != nil {
 		return err
 	}
-	if successCode != code {
+	if !containsCode(successCodes, code) {
 		return fmt.Errorf("%d", code)
 	}
 	return nil
+}
+
+func containsCode(successCode []int, code int) bool {
+	for _, successCode := range successCode {
+		if successCode == code {
+			return true
+		}
+	}
+	return false
 }

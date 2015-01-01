@@ -11,7 +11,7 @@ func (c *Client) CreateApp(app *Application) (resApp *Application, err error) {
 		Datas:  app,
 		Method: "POST",
 	}
-	err = c.unmarshalJSON(options, http.StatusCreated, resApp)
+	err = c.unmarshalJSON(options, []int{http.StatusCreated}, resApp)
 	return
 }
 
@@ -26,7 +26,7 @@ func (c *Client) GetAppsWithParams(params *Parameters) (apps []*Application, err
 		Params: params,
 	}
 	resp := &response{}
-	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
 	apps = resp.Apps
 	return
 }
@@ -37,7 +37,7 @@ func (c *Client) GetApp(appID string) (app *Application, err error) {
 		Method: "GET",
 	}
 	resp := &response{}
-	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
 	app = resp.App
 	return
 }
@@ -48,7 +48,7 @@ func (c *Client) GetAppVersions(appID string) (versions []string, err error) {
 		Method: "GET",
 	}
 	resp := &response{}
-	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
 	versions = resp.Versions
 	return
 }
@@ -58,7 +58,7 @@ func (c *Client) GetAppByVersion(appID, version string) (app *Application, err e
 		Path:   fmt.Sprintf("apps/%s/versions/%s", appID, version),
 		Method: "GET",
 	}
-	err = c.unmarshalJSON(options, http.StatusOK, app)
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, app)
 	return
 }
 
@@ -74,7 +74,7 @@ func (c *Client) UpdateAppWithParams(appID string, app *Application, params *Par
 		Params: params,
 	}
 	resp := &response{}
-	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
 	deploymentID = resp.DeploymentID
 	version = resp.Version
 	return
@@ -85,7 +85,7 @@ func (c *Client) DestroyApp(appID string) error {
 		Path:   fmt.Sprintf("apps/%s", appID),
 		Method: "DELETE",
 	}
-	return c.requestAndCheckSucc(options, http.StatusNoContent)
+	return c.requestAndCheckSucc(options, []int{http.StatusNoContent})
 }
 
 func (c *Client) GetAppTasks(appID string) (tasks []*Task, err error) {
@@ -94,7 +94,7 @@ func (c *Client) GetAppTasks(appID string) (tasks []*Task, err error) {
 		Method: "GET",
 	}
 	resp := &response{}
-	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
 	tasks = resp.Tasks
 	return
 }
@@ -106,7 +106,7 @@ func (c *Client) KillTasksWithParams(appID string, params *Parameters) (tasks []
 		Params: params,
 	}
 	resp := &response{}
-	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
 	tasks = resp.Tasks
 	return
 }
@@ -122,7 +122,7 @@ func (c *Client) KillTaskWithParams(appID, taskID string, params *Parameters) (t
 		Params: params,
 	}
 	resp := &response{}
-	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
 	task = resp.Task
 	return
 }

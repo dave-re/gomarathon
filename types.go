@@ -89,7 +89,20 @@ type Volume struct {
 }
 
 type Deployment struct {
-	ID string `json:"id"`
+	ID             string    `json:"id,omitempty"`
+	AffectedApps   []string  `json:"affectedApps,omitempty"`
+	Steps          []*Step   `json:"steps,omitempty"`
+	CurrentActions []*Action `json:"currentActions,omitempty"`
+	Version        string    `json:"version,omitempty"`
+	CurrentStep    int       `json:"currentStep,omitempty"`
+	TotalSteps     int       `json:"totalSteps,omitempty"`
+}
+
+type Step []*Action
+
+type Action struct {
+	Action string `json:"action"`
+	App    string `json:"app"`
 }
 
 // HealthCheck is described here:

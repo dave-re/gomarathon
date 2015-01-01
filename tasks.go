@@ -10,7 +10,7 @@ func (c *Client) GetTasks() (tasks []*Task, err error) {
 		Method: "GET",
 	}
 	resp := &response{}
-	err = c.unmarshalJSON(options, http.StatusOK, resp)
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
 	tasks = resp.Tasks
 	return
 }
