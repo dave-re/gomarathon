@@ -5,12 +5,23 @@ import (
 	"net/http"
 )
 
+type GetAppsParams struct {
+	Cmd   string
+	Embed Embed
+}
+
+type KillTasksParams struct {
+	Host  string
+	Scale bool
+}
+
 func (c *Client) CreateApp(app *Application) (resApp *Application, err error) {
 	options := &RequestOptions{
 		Path:   "apps",
 		Datas:  app,
 		Method: "POST",
 	}
+	resApp = &Application{}
 	err = c.unmarshalJSON(options, []int{http.StatusCreated}, resApp)
 	return
 }
@@ -19,11 +30,16 @@ func (c *Client) GetApps() ([]*Application, error) {
 	return c.GetAppsWithParams(nil)
 }
 
-func (c *Client) GetAppsWithParams(params *Parameters) (apps []*Application, err error) {
+func (c *Client) GetAppsWithParams(params *GetAppsParams) (apps []*Application, err error) {
 	options := &RequestOptions{
 		Path:   "apps",
 		Method: "GET",
-		Params: params,
+	}
+	if params != nil {
+		options.Params = &Parameters{
+			Cmd:   params.Cmd,
+			Embed: params.Embed,
+		}
 	}
 	resp := &response{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
@@ -58,20 +74,23 @@ func (c *Client) GetAppByVersion(appID, version string) (app *Application, err e
 		Path:   fmt.Sprintf("apps/%s/versions/%s", appID, version),
 		Method: "GET",
 	}
+	app = &Application{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, app)
 	return
 }
 
 func (c *Client) UpdateApp(appID string, app *Application) (deploymentID, version string, err error) {
-	return c.UpdateAppWithParams(appID, app, nil)
+	return c.UpdateAppWithParams(appID, app, false)
 }
 
-func (c *Client) UpdateAppWithParams(appID string, app *Application, params *Parameters) (deploymentID, version string, err error) {
+func (c *Client) UpdateAppWithParams(appID string, app *Application, force bool) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s", appID),
 		Datas:  app,
 		Method: "PUT",
-		Params: params,
+		Params: &Parameters{
+			Force: force,
+		},
 	}
 	resp := &response{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
@@ -85,7 +104,7 @@ func (c *Client) DestroyApp(appID string) error {
 		Path:   fmt.Sprintf("apps/%s", appID),
 		Method: "DELETE",
 	}
-	return c.requestAndCheckSucc(options, []int{http.StatusNoContent})
+	return c.requestAndCheckSucc(options, []int{http.StatusOK})
 }
 
 func (c *Client) GetAppTasks(appID string) (tasks []*Task, err error) {
@@ -99,11 +118,20 @@ func (c *Client) GetAppTasks(appID string) (tasks []*Task, err error) {
 	return
 }
 
-func (c *Client) KillTasksWithParams(appID string, params *Parameters) (tasks []*Task, err error) {
+func (c *Client) KillTasks(appID string) (tasks []*Task, err error) {
+	return c.KillTasksWithParams(appID, nil)
+}
+
+func (c *Client) KillTasksWithParams(appID string, params *KillTasksParams) (tasks []*Task, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s/tasks", appID),
 		Method: "DELETE",
-		Params: params,
+	}
+	if params != nil {
+		options.Params = &Parameters{
+			Host:  params.Host,
+			Scale: params.Scale,
+		}
 	}
 	resp := &response{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
@@ -111,22 +139,20 @@ func (c *Client) KillTasksWithParams(appID string, params *Parameters) (tasks []
 	return
 }
 
-func (c *Client) KillTasks(appID string) (tasks []*Task, err error) {
-	return c.KillTasksWithParams(appID, nil)
+func (c *Client) KillTask(appID, taskID string) (task *Task, err error) {
+	return c.KillTaskWithParams(appID, taskID, false)
 }
 
-func (c *Client) KillTaskWithParams(appID, taskID string, params *Parameters) (task *Task, err error) {
+func (c *Client) KillTaskWithParams(appID, taskID string, scale bool) (task *Task, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s/tasks/%s", appID, taskID),
 		Method: "DELETE",
-		Params: params,
+		Params: &Parameters{
+			Scale: scale,
+		},
 	}
 	resp := &response{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
 	task = resp.Task
 	return
-}
-
-func (c *Client) KillTask(appID, taskID string) (task *Task, err error) {
-	return c.KillTaskWithParams(appID, taskID, nil)
 }

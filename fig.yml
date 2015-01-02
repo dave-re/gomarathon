@@ -22,7 +22,7 @@ master:
   links:
    - "zk:zookeeper"
   environment:
-    MESOS_CLUSTER: breerly/fig-mesos
+    MESOS_CLUSTER: go-marathon
     MESOS_HOSTNAME: localdocker
     MESOS_WORK_DIR: /var/lib/mesos
     MESOS_LOG_DIR: /var/log

@@ -10,6 +10,7 @@ func (c *Client) GetDeployments() (deployments []*Deployment, err error) {
 		Path:   "deployments",
 		Method: "GET",
 	}
+	deployments = []*Deployment{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, deployments)
 	return
 }

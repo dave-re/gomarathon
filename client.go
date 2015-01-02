@@ -9,6 +9,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 const (
@@ -16,8 +18,14 @@ const (
 )
 
 type Client struct {
-	Host       *url.URL
-	HTTPClient *http.Client
+	host       *url.URL
+	httpClient *http.Client
+	username   string
+	password   string
+}
+
+func init() {
+	log.SetLevel(log.DebugLevel)
 }
 
 func NewClient(host string, tlsConfig *tls.Config) (*Client, error) {
@@ -27,9 +35,14 @@ func NewClient(host string, tlsConfig *tls.Config) (*Client, error) {
 	}
 
 	return &Client{
-		Host:       h,
-		HTTPClient: newHTTPClient(h, tlsConfig),
+		host:       h,
+		httpClient: newHTTPClient(h, tlsConfig),
 	}, nil
+}
+
+func (c *Client) SetBasicAuth(username, password string) {
+	c.username = username
+	c.password = password
 }
 
 // do the actual prepared request in request()
@@ -45,7 +58,7 @@ func (c *Client) do(method, path string, data interface{}) ([]byte, int, error) 
 		params = bytes.NewBuffer(buf)
 	}
 
-	req, err := http.NewRequest(method, c.Host.String()+path, params)
+	req, err := http.NewRequest(method, c.host.String()+path, params)
 	if err != nil {
 		return nil, -1, err
 	}
@@ -53,8 +66,11 @@ func (c *Client) do(method, path string, data interface{}) ([]byte, int, error) 
 	// Prepare and do the request
 	req.Header.Set("User-Agent", "gomarathon")
 	req.Header.Set("Content-Type", "application/json")
+	if c.username != "" && c.password != "" {
+		req.SetBasicAuth(c.username, c.password)
+	}
 
-	resp, err = c.HTTPClient.Do(req)
+	resp, err = c.httpClient.Do(req)
 	if err != nil {
 		return nil, -1, err
 	}
@@ -66,7 +82,7 @@ func (c *Client) do(method, path string, data interface{}) ([]byte, int, error) 
 		return nil, -1, err
 	}
 	if resp.StatusCode >= 400 {
-		return nil, resp.StatusCode, fmt.Errorf("%d: %s", resp.StatusCode, body)
+		return nil, resp.StatusCode, fmt.Errorf("status code : %d, body: %s", resp.StatusCode, body)
 	}
 
 	return body, resp.StatusCode, nil
@@ -78,7 +94,7 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 		options.Method = "GET"
 	}
 
-	path := fmt.Sprintf("%s/%s", APIVersion, options.Path)
+	path := fmt.Sprintf("/%s/%s", APIVersion, options.Path)
 
 	if options.Params != nil {
 		v := url.Values{}
@@ -92,10 +108,14 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 		}
 
 		if options.Params.CallbackURL != "" {
-			v.Set("CallbackURL", url.QueryEscape(options.Params.CallbackURL))
+			v.Set("callbackUrl", url.QueryEscape(options.Params.CallbackURL))
 		}
 
 		if options.Params.Embed != None {
+			v.Set("embed", options.Params.Embed.String())
+		}
+
+		if options.Params.Cmd != "" {
 			v.Set("cmd", url.QueryEscape(options.Params.Cmd))
 		}
 
@@ -103,7 +123,11 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 			v.Set("force", "true")
 		}
 
-		path = fmt.Sprintf("%s?%s", path, v.Encode())
+		params := v.Encode()
+		if params != "" {
+			path = fmt.Sprintf("%s?%s", path, v.Encode())
+		}
+		log.Debugf("path: %s\n", path)
 	}
 
 	return c.do(options.Method, path, options.Datas)
@@ -114,8 +138,9 @@ func (c *Client) unmarshalJSON(options *RequestOptions, successCodes []int, v in
 	if err != nil {
 		return err
 	}
+	log.Debugf("response data: %s\n", data)
 	if !containsCode(successCodes, code) {
-		return fmt.Errorf("%d: %s", code, data)
+		return fmt.Errorf("status code : %d, data: %s", code, data)
 	}
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
@@ -129,7 +154,7 @@ func (c *Client) requestAndCheckSucc(options *RequestOptions, successCodes []int
 		return err
 	}
 	if !containsCode(successCodes, code) {
-		return fmt.Errorf("%d", code)
+		return fmt.Errorf("status code : %d", code)
 	}
 	return nil
 }

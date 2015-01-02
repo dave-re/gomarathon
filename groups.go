@@ -21,6 +21,7 @@ func (c *Client) GetGroup(groupID string) (group *Group, err error) {
 		Path:   fmt.Sprintf("groups/%s", groupID),
 		Method: "GET",
 	}
+	group = &Group{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, group)
 	return
 }

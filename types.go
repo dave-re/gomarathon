@@ -24,9 +24,11 @@ type Application struct {
 	ID              string            `json:"id,omitempty"`
 	Cmd             string            `json:"cmd,omitempty"`
 	Args            []string          `json:"args,omitempty"`
+	User            string            `json:"user,omitempty"`
 	Container       *Container        `json:"container,omitempty"`
 	CPUs            float64           `json:"cpus,omitempty"`
 	Mem             float64           `json:"mem,omitempty"`
+	Disk            float64           `json:"disk,omitempty"`
 	Deployments     []*Deployment     `json:"deployments,omitempty"`
 	Env             map[string]string `json:"env,omitempty"`
 	Executor        string            `json:"executor,omitempty"`
@@ -34,11 +36,13 @@ type Application struct {
 	HealthChecks    []*HealthCheck    `json:"healthChecks,omitempty"`
 	Instances       int               `json:"instances,omitemptys"`
 	Ports           []int             `json:"ports,omitempty"`
+	RequirePorts    bool              `json:"requirePorts,omitempty"`
 	BackoffSeconds  int               `json:"backoffSeconds,omitempty"`
 	BackoffFactor   float64           `json:"backoffFactor,omitempty"`
 	TasksRunning    int               `json:"tasksRunning,omitempty"`
 	TasksStaged     int               `json:"tasksStaged,omitempty"`
 	Uris            []string          `json:"uris,omitempty"`
+	StoreUris       []string          `json:"storeUris,omitempty"`
 	Dependencies    []string          `json:"dependencies,omitempty"`
 	UpgradeStrategy *UpgradeStrategy  `json:"upgradeStrategy,omitempty"`
 	Version         string            `json:"version,omitempty"`
@@ -68,7 +72,11 @@ type Task struct {
 
 // Container is docker parameters
 type Container struct {
-	Type         string         `json:"type"`
+	Type   string  `json:"type"`
+	Docker *Docker `json:"docker,omitempty"`
+}
+
+type Docker struct {
 	Image        string         `json:"image,omitempty"`
 	Network      string         `json:"network,omitempty"`
 	PortMappings []*PortMapping `json:"portMappings,omitempty"`
@@ -211,7 +219,7 @@ type response struct {
 	App          *Application   `json:"app,omitempty"`
 	Versions     []string       `json:"versions,omitempty"`
 	DeploymentID string         `json:"deploymentId,omitempty"`
-	Version      string         `json:"versoin,omitempty"`
+	Version      string         `json:"version,omitempty"`
 	Tasks        []*Task        `json:"tasks,omitempty"`
 	Task         *Task          `json:"task,omitempty"`
 	CallbackUrls []string       `json:"callbackUrls,omitempty"`
