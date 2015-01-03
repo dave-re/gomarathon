@@ -16,6 +16,7 @@ func (c *Client) RegisterCallbackURL(callbackURL string) (response *EventRespons
 		Method: "POST",
 		Params: &Parameters{CallbackURL: callbackURL},
 	}
+	response = &EventResponse{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, response)
 	return
 }
@@ -37,6 +38,7 @@ func (c *Client) UnregisterCallbackURL(callbackURL string) (response *EventRespo
 		Method: "DELETE",
 		Params: &Parameters{CallbackURL: callbackURL},
 	}
+	response = &EventResponse{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, response)
 	return
 }

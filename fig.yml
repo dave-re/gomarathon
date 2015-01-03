@@ -82,7 +82,7 @@ marathon:
     - "8080:8080"
   links:
     - "zk:zookeeper"
-  command: "--master zk://zookeeper:2181/mesos --zk zk://zookeeper:2181/marathon"
+  command: "--master zk://zookeeper:2181/mesos --zk zk://zookeeper:2181/marathon --event_subscriber http_callback"
 
 dockerregistry:
   image: registry:0.8.1

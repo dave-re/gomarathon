@@ -100,7 +100,7 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 		v := url.Values{}
 
 		if options.Params.Host != "" {
-			v.Set("host", url.QueryEscape(options.Params.Host))
+			v.Set("host", options.Params.Host)
 		}
 
 		if options.Params.Scale {
@@ -108,7 +108,7 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 		}
 
 		if options.Params.CallbackURL != "" {
-			v.Set("callbackUrl", url.QueryEscape(options.Params.CallbackURL))
+			v.Set("callbackUrl", options.Params.CallbackURL)
 		}
 
 		if options.Params.Embed != None {
@@ -116,7 +116,7 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 		}
 
 		if options.Params.Cmd != "" {
-			v.Set("cmd", url.QueryEscape(options.Params.Cmd))
+			v.Set("cmd", options.Params.Cmd)
 		}
 
 		if options.Params.Force {
