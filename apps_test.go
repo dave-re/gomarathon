@@ -7,8 +7,7 @@ import (
 )
 
 var (
-	client, _ = NewClient("http://localdocker:8080", nil)
-	appID     = "nginx"
+	appID = "nginx"
 )
 
 func TestCreateApp(t *testing.T) {

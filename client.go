@@ -136,6 +136,7 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 func (c *Client) unmarshalJSON(options *RequestOptions, successCodes []int, v interface{}) error {
 	data, code, err := c.request(options)
 	if err != nil {
+		log.Debugf("err: %s\n", err)
 		return err
 	}
 	log.Debugf("response data: %s\n", data)
