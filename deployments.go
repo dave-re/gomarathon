@@ -11,7 +11,7 @@ func (c *Client) GetDeployments() (deployments []*Deployment, err error) {
 		Method: "GET",
 	}
 	deployments = []*Deployment{}
-	err = c.unmarshalJSON(options, []int{http.StatusOK}, deployments)
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, &deployments)
 	return
 }
 

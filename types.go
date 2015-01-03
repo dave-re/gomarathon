@@ -61,18 +61,18 @@ type Group struct {
 // Task is described here:
 // https://mesosphere.github.io/marathon/docs/rest-api.html#tasks
 type Task struct {
-	AppID     string `json:"appId"`
-	Host      string `json:"host"`
-	ID        string `json:"id"`
-	Ports     []int  `json:"ports"`
-	StagedAt  string `json:"stagedAt"`
-	StartedAt string `json:"startedAt"`
-	Version   string `json:"version"`
+	AppID     string `json:"appId,omitempty"`
+	Host      string `json:"host,omitempty"`
+	ID        string `json:"id,omitempty"`
+	Ports     []int  `json:"ports,omitempty"`
+	StagedAt  string `json:"stagedAt,omitempty"`
+	StartedAt string `json:"startedAt,omitempty"`
+	Version   string `json:"version,omitempty"`
 }
 
 // Container is docker parameters
 type Container struct {
-	Type   string  `json:"type"`
+	Type   string  `json:"type,omitempty"`
 	Docker *Docker `json:"docker,omitempty"`
 }
 
@@ -109,17 +109,17 @@ type Deployment struct {
 type Step []*Action
 
 type Action struct {
-	Action string `json:"action"`
-	App    string `json:"app"`
+	Action string `json:"action,omitempty"`
+	Apps   string `json:"apps,omitempty"`
 }
 
 type TaskQueue struct {
-	App   string `json:"app"`
-	Delay *Delay `json:"delay"`
+	App   string `json:"app,omitempty"`
+	Delay *Delay `json:"delay,omitempty"`
 }
 
 type Delay struct {
-	Overdue bool `json:"overdue"`
+	Overdue bool `json:"overdue,omitempty"`
 }
 
 // HealthCheck is described here:
@@ -136,7 +136,7 @@ type HealthCheck struct {
 }
 
 type Command struct {
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 type UpgradeStrategy struct {
