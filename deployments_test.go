@@ -6,25 +6,6 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
-func createApp() {
-	client.CreateApp(&Application{
-		ID:        appID,
-		Instances: 1,
-		CPUs:      0.1,
-		Mem:       128.0,
-		Container: &Container{
-			Type: "DOCKER",
-			Docker: &Docker{
-				Image: "nginx:latest",
-			},
-		},
-	})
-}
-
-func destroyApp() {
-	client.DestroyApp(appID)
-}
-
 func TestGetDeployments(t *testing.T) {
 	createApp()
 	if deployments, err := client.GetDeployments(); err != nil {

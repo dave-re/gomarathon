@@ -61,13 +61,14 @@ type Group struct {
 // Task is described here:
 // https://mesosphere.github.io/marathon/docs/rest-api.html#tasks
 type Task struct {
-	AppID     string `json:"appId,omitempty"`
-	Host      string `json:"host,omitempty"`
-	ID        string `json:"id,omitempty"`
-	Ports     []int  `json:"ports,omitempty"`
-	StagedAt  string `json:"stagedAt,omitempty"`
-	StartedAt string `json:"startedAt,omitempty"`
-	Version   string `json:"version,omitempty"`
+	AppID        string `json:"appId,omitempty"`
+	ID           string `json:"id,omitempty"`
+	Host         string `json:"host,omitempty"`
+	Ports        []int  `json:"ports,omitempty"`
+	StagedAt     string `json:"stagedAt,omitempty"`
+	StartedAt    string `json:"startedAt,omitempty"`
+	Version      string `json:"version,omitempty"`
+	ServicePorts []int  `json:"servicePorts,omitempty"`
 }
 
 // Container is docker parameters
