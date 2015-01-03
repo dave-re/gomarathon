@@ -115,8 +115,8 @@ type Action struct {
 }
 
 type TaskQueue struct {
-	App   string `json:"app,omitempty"`
-	Delay *Delay `json:"delay,omitempty"`
+	App   *Application `json:"app,omitempty"`
+	Delay *Delay       `json:"delay,omitempty"`
 }
 
 type Delay struct {

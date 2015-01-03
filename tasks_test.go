@@ -8,7 +8,7 @@ import (
 )
 
 func TestTasks(t *testing.T) {
-	createApp()
+	createApp("tasktest")
 	time.Sleep(5 * time.Second)
 	if tasks, err := client.GetTasks(); err != nil {
 		t.Error(err)

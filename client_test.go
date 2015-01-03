@@ -6,9 +6,9 @@ var (
 	client, _ = NewClient("http://localdocker:8080", nil)
 )
 
-func createApp() {
+func createApp(id string) {
 	client.CreateApp(&Application{
-		ID:        appID,
+		ID:        id,
 		Instances: 1,
 		CPUs:      0.1,
 		Mem:       128.0,
@@ -21,8 +21,8 @@ func createApp() {
 	})
 }
 
-func destroyApp() {
-	client.DestroyApp(appID)
+func destroyApp(id string) {
+	client.DestroyApp(id)
 }
 
 func TestNewClient(t *testing.T) {

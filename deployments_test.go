@@ -7,7 +7,7 @@ import (
 )
 
 func TestGetDeployments(t *testing.T) {
-	createApp()
+	createApp("deploytest")
 	if deployments, err := client.GetDeployments(); err != nil {
 		t.Error(err)
 	} else {
@@ -15,11 +15,11 @@ func TestGetDeployments(t *testing.T) {
 			log.Debugf("Deployment: %#v\n", deployment)
 		}
 	}
-	destroyApp()
+	destroyApp("deploytest")
 }
 
 func TestCancelDeployment(t *testing.T) {
-	createApp()
+	createApp("deploytest")
 	deployments, err := client.GetDeployments()
 	if err != nil {
 		t.Error(err)
@@ -31,5 +31,5 @@ func TestCancelDeployment(t *testing.T) {
 		log.Debugf("DeploymentID: %s\n", deploymentID)
 		log.Debugf("Version: %s\n", version)
 	}
-	destroyApp()
+	destroyApp("deploytest")
 }
