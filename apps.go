@@ -99,12 +99,16 @@ func (c *Client) UpdateAppWithParams(appID string, app *Application, force bool)
 	return
 }
 
-func (c *Client) DestroyApp(appID string) error {
+func (c *Client) DestroyApp(appID string) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s", appID),
 		Method: "DELETE",
 	}
-	return c.requestAndCheckSucc(options, []int{http.StatusOK})
+	resp := &response{}
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
+	deploymentID = resp.DeploymentID
+	version = resp.Version
+	return
 }
 
 func (c *Client) GetAppTasks(appID string) (tasks []*Task, err error) {

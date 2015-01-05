@@ -185,11 +185,14 @@ func TestKillTaskWithParams(t *testing.T) {
 }
 
 func TestDestroyApp(t *testing.T) {
-	if err := client.DestroyApp("notfound"); err == nil {
+	if _, _, err := client.DestroyApp("notfound"); err == nil {
 		t.Error("found app that not exists")
 	}
 
-	if err := client.DestroyApp(appID); err != nil {
+	if deploymentID, version, err := client.DestroyApp(appID); err != nil {
 		t.Error(err)
+	} else {
+		log.Debugf("DeploymentID: %s\n", deploymentID)
+		log.Debugf("Version: %s\n", version)
 	}
 }
