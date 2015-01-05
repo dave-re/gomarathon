@@ -28,6 +28,10 @@ func init() {
 	log.SetLevel(log.DebugLevel)
 }
 
+func SetLogLevel(logLevel log.Level) {
+	log.SetLevel(logLevel)
+}
+
 func NewClient(host string, tlsConfig *tls.Config) (*Client, error) {
 	h, err := url.Parse(host)
 	if err != nil {
