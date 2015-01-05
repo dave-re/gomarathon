@@ -24,10 +24,6 @@ type Client struct {
 	password   string
 }
 
-func init() {
-	log.SetLevel(log.DebugLevel)
-}
-
 func SetLogLevel(logLevel log.Level) {
 	log.SetLevel(logLevel)
 }
