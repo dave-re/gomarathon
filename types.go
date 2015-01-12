@@ -30,7 +30,7 @@ type Application struct {
 	Mem             float64           `json:"mem,omitempty"`
 	Disk            float64           `json:"disk,omitempty"`
 	Deployments     []*Deployment     `json:"deployments,omitempty"`
-	Env             map[string]string `json:"env,omitempty"`
+	Env             map[string]string `json:"env"`
 	Executor        string            `json:"executor,omitempty"`
 	Constraints     [][]string        `json:"constraints,omitempty"`
 	HealthChecks    []*HealthCheck    `json:"healthChecks,omitempty"`
