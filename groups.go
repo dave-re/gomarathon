@@ -1,10 +1,12 @@
-package marathon
+package gomarathon
 
 import (
 	"fmt"
 	"net/http"
 )
 
+// CreateGroup create and start a new application group
+// http://goo.gl/Q5n2OB
 func (c *Client) CreateGroup(group *Group) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   "groups",
@@ -18,6 +20,8 @@ func (c *Client) CreateGroup(group *Group) (deploymentID, version string, err er
 	return
 }
 
+// UpdateGroup change parameters of a deployed application group
+// http://goo.gl/Cmnpam
 func (c *Client) UpdateGroup(groupID string, group *Group) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("groups/%s", groupID),
@@ -31,6 +35,8 @@ func (c *Client) UpdateGroup(groupID string, group *Group) (deploymentID, versio
 	return
 }
 
+// GetGroups list all groups
+// http://goo.gl/YR1KTx
 func (c *Client) GetGroups() (groups []*Group, err error) {
 	options := &RequestOptions{
 		Path:   "groups",
@@ -42,6 +48,8 @@ func (c *Client) GetGroups() (groups []*Group, err error) {
 	return
 }
 
+// GetGroup gets the group with the specified ID
+// http://goo.gl/DDf1AW
 func (c *Client) GetGroup(groupID string) (group *Group, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("groups/%s", groupID),
@@ -52,6 +60,8 @@ func (c *Client) GetGroup(groupID string) (group *Group, err error) {
 	return
 }
 
+// DestroyGroup destroy a group
+// http://goo.gl/bYQGu4
 func (c *Client) DestroyGroup(groupID string) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("groups/%s", groupID),

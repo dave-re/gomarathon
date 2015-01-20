@@ -1,4 +1,4 @@
-package marathon
+package gomarathon
 
 import "testing"
 

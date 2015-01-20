@@ -1,20 +1,24 @@
-package marathon
+package gomarathon
 
 import (
 	"fmt"
 	"net/http"
 )
 
+// GetAppsParams is parameters for GetAppsWithParams function
 type GetAppsParams struct {
 	Cmd   string
 	Embed Embed
 }
 
+// KillTasksParams is parameters for KillTasksWithParams function
 type KillTasksParams struct {
 	Host  string
 	Scale bool
 }
 
+// CreateApp create and start a new application.
+// http://goo.gl/fM0CLu
 func (c *Client) CreateApp(app *Application) (resApp *Application, err error) {
 	options := &RequestOptions{
 		Path:   "apps",
@@ -26,10 +30,14 @@ func (c *Client) CreateApp(app *Application) (resApp *Application, err error) {
 	return
 }
 
+// GetApps gets all running applications
+// http://goo.gl/Sh617O
 func (c *Client) GetApps() ([]*Application, error) {
 	return c.GetAppsWithParams(nil)
 }
 
+// GetAppsWithParams gets all running applications with parameters
+// http://goo.gl/i2EO8b
 func (c *Client) GetAppsWithParams(params *GetAppsParams) (apps []*Application, err error) {
 	options := &RequestOptions{
 		Path:   "apps",
@@ -47,6 +55,8 @@ func (c *Client) GetAppsWithParams(params *GetAppsParams) (apps []*Application, 
 	return
 }
 
+// GetApp gets the application with appID
+// http://goo.gl/4pbxGV
 func (c *Client) GetApp(appID string) (app *Application, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s", appID),
@@ -58,6 +68,8 @@ func (c *Client) GetApp(appID string) (app *Application, err error) {
 	return
 }
 
+// GetAppVersions gets the versions of the application with appID
+// http://goo.gl/hdBz1v
 func (c *Client) GetAppVersions(appID string) (versions []string, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s/versions", appID),
@@ -69,6 +81,8 @@ func (c *Client) GetAppVersions(appID string) (versions []string, err error) {
 	return
 }
 
+// GetAppByVersion gets the configuration of the application with appID at version
+// http://goo.gl/yUtHNn
 func (c *Client) GetAppByVersion(appID, version string) (app *Application, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s/versions/%s", appID, version),
@@ -79,10 +93,14 @@ func (c *Client) GetAppByVersion(appID, version string) (app *Application, err e
 	return
 }
 
+// UpdateApp change parameters of a running application
+// http://goo.gl/LVbV33
 func (c *Client) UpdateApp(appID string, app *Application) (deploymentID, version string, err error) {
 	return c.UpdateAppWithParams(appID, app, false)
 }
 
+// UpdateAppWithParams change parameters of a running application with parameters
+// http://goo.gl/LVbV33
 func (c *Client) UpdateAppWithParams(appID string, app *Application, force bool) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s", appID),
@@ -99,6 +117,31 @@ func (c *Client) UpdateAppWithParams(appID string, app *Application, force bool)
 	return
 }
 
+// RestartAllTasks initiates a rolling restart of all running tasks of the given app
+// http://goo.gl/aL7ndP
+func (c *Client) RestartAllTasks(appID string, force bool) (deploymentID, version string, err error) {
+	return c.RestartAllTasksWithParams(appID, false)
+}
+
+// RestartAllTasksWithParams initiates a rolling restart of all running tasks of the given app with parameters
+// http://goo.gl/aL7ndP
+func (c *Client) RestartAllTasksWithParams(appID string, force bool) (deploymentID, version string, err error) {
+	options := &RequestOptions{
+		Path:   fmt.Sprintf("apps/%s/restart", appID),
+		Method: "POST",
+		Params: &Parameters{
+			Force: force,
+		},
+	}
+	resp := &response{}
+	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
+	deploymentID = resp.DeploymentID
+	version = resp.Version
+	return
+}
+
+// DestroyApp destroy an application
+// http://goo.gl/70pGRO
 func (c *Client) DestroyApp(appID string) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s", appID),
@@ -111,6 +154,8 @@ func (c *Client) DestroyApp(appID string) (deploymentID, version string, err err
 	return
 }
 
+// GetAppTasks gets all running tasks for application with appID
+// http://goo.gl/Q2CbyV
 func (c *Client) GetAppTasks(appID string) (tasks []*Task, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s/tasks", appID),
@@ -122,10 +167,14 @@ func (c *Client) GetAppTasks(appID string) (tasks []*Task, err error) {
 	return
 }
 
+// KillTasks kill tasks that belong to the application with appID
+// http://goo.gl/Czr77g
 func (c *Client) KillTasks(appID string) (tasks []*Task, err error) {
 	return c.KillTasksWithParams(appID, nil)
 }
 
+// KillTasksWithParams kill tasks that belong to the application with appID and parameters
+// http://goo.gl/Czr77g
 func (c *Client) KillTasksWithParams(appID string, params *KillTasksParams) (tasks []*Task, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s/tasks", appID),
@@ -143,10 +192,14 @@ func (c *Client) KillTasksWithParams(appID string, params *KillTasksParams) (tas
 	return
 }
 
+// KillTask kill the task with taskID that belongs to the application with appID
+// http://goo.gl/SURgNZ
 func (c *Client) KillTask(appID, taskID string) (task *Task, err error) {
 	return c.KillTaskWithParams(appID, taskID, false)
 }
 
+// KillTaskWithParams kill the task with taskID that belongs to the application with appID and parameters
+// http://goo.gl/SURgNZ
 func (c *Client) KillTaskWithParams(appID, taskID string, scale bool) (task *Task, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s/tasks/%s", appID, taskID),

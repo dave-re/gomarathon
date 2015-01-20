@@ -1,9 +1,11 @@
-package marathon
+package gomarathon
 
 import (
 	"net/http"
 )
 
+// GetTaskQueue show content of the task queue
+// http://goo.gl/6TULb6
 func (c *Client) GetTaskQueue() (queue []*TaskQueue, err error) {
 	options := &RequestOptions{
 		Path:   "queue",

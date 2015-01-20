@@ -1,4 +1,4 @@
-package marathon
+package gomarathon
 
 import (
 	"bytes"
@@ -13,10 +13,13 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
+// Actual version of the marathon api
 const (
 	APIVersion = "v2"
 )
 
+// Client is containing the configured http.Client
+// and the host url
 type Client struct {
 	host       *url.URL
 	httpClient *http.Client
@@ -24,10 +27,12 @@ type Client struct {
 	password   string
 }
 
+// SetLogLevel sets log level of client
 func SetLogLevel(logLevel log.Level) {
 	log.SetLevel(logLevel)
 }
 
+// NewClient return a pointer to the new client
 func NewClient(host string, tlsConfig *tls.Config) (*Client, error) {
 	h, err := url.Parse(host)
 	if err != nil {
@@ -40,6 +45,7 @@ func NewClient(host string, tlsConfig *tls.Config) (*Client, error) {
 	}, nil
 }
 
+// SetBasicAuth sets http basic auth
 func (c *Client) SetBasicAuth(username, password string) {
 	c.username = username
 	c.password = password
@@ -111,7 +117,7 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 			v.Set("callbackUrl", options.Params.CallbackURL)
 		}
 
-		if options.Params.Embed != None {
+		if options.Params.Embed != NoneEmbed {
 			v.Set("embed", options.Params.Embed.String())
 		}
 
@@ -121,6 +127,10 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 
 		if options.Params.Force {
 			v.Set("force", "true")
+		}
+
+		if options.Params.Status != NoneStatus {
+			v.Set("status", options.Params.Status.String())
 		}
 
 		params := v.Encode()

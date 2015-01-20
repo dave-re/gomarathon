@@ -1,4 +1,4 @@
-package marathon
+package gomarathon
 
 // RequestOptions passed for query api
 type RequestOptions struct {
@@ -16,10 +16,11 @@ type Parameters struct {
 	CallbackURL string
 	Embed       Embed
 	Force       bool
+	Status      Status
 }
 
-// Application marathon application see :
-// https://mesosphere.github.io/marathon/docs/rest-api.html#apps
+// Application is marathon application
+// http://goo.gl/MNP22N
 type Application struct {
 	ID              string            `json:"id,omitempty"`
 	Cmd             string            `json:"cmd,omitempty"`
@@ -49,6 +50,8 @@ type Application struct {
 	Tasks           []*Task           `json:"tasks,omitempty"`
 }
 
+// Group is marathon group
+// http://goo.gl/6n6FSI
 type Group struct {
 	ID           string         `json:"id,omitempty"`
 	Dependencies []string       `json:"dependencies,omitempty"`
@@ -59,7 +62,7 @@ type Group struct {
 }
 
 // Task is described here:
-// https://mesosphere.github.io/marathon/docs/rest-api.html#tasks
+// http://goo.gl/gw6dTA
 type Task struct {
 	AppID        string `json:"appId,omitempty"`
 	ID           string `json:"id,omitempty"`
@@ -71,12 +74,13 @@ type Task struct {
 	ServicePorts []int  `json:"servicePorts,omitempty"`
 }
 
-// Container is docker parameters
+// Container is container parameters
 type Container struct {
 	Type   string  `json:"type,omitempty"`
 	Docker *Docker `json:"docker,omitempty"`
 }
 
+// Docker options
 type Docker struct {
 	Image        string         `json:"image,omitempty"`
 	Network      string         `json:"network,omitempty"`
@@ -84,6 +88,7 @@ type Docker struct {
 	Volumes      []*Volume      `json:"volumes,omitempty"`
 }
 
+// PortMapping is port mapping for docker container
 type PortMapping struct {
 	ContainerPort int    `json:"containerPort,omitempty"`
 	HostPort      int    `json:"hostPort,omitempty"`
@@ -91,12 +96,15 @@ type PortMapping struct {
 	Protocol      string `json:"protocol,omitempty"`
 }
 
+// Volume is used for mounting a host directory as a container volume
 type Volume struct {
 	ContainerPath string `json:"containerPath,omitempty"`
 	HostPath      string `json:"hostPath,omitempty"`
 	Mode          string `json:"mode,omitempty"`
 }
 
+// Deployment is marathon deployment
+// http://goo.gl/iJludX
 type Deployment struct {
 	ID             string    `json:"id,omitempty"`
 	AffectedApps   []string  `json:"affectedApps,omitempty"`
@@ -107,24 +115,28 @@ type Deployment struct {
 	TotalSteps     int       `json:"totalSteps,omitempty"`
 }
 
+// Step is step for deployment
 type Step []*Action
 
+// Action is Action for deployment
 type Action struct {
 	Action string `json:"action,omitempty"`
 	Apps   string `json:"apps,omitempty"`
 }
 
+// TaskQueue is Action for queue
 type TaskQueue struct {
 	App   *Application `json:"app,omitempty"`
 	Delay *Delay       `json:"delay,omitempty"`
 }
 
+// Delay is delay for task queue
 type Delay struct {
 	Overdue bool `json:"overdue,omitempty"`
 }
 
 // HealthCheck is described here:
-// https://mesosphere.github.io/marathon/docs/health-checks.html
+// http://goo.gl/0GVD6o
 type HealthCheck struct {
 	Protocol               string   `json:"protocol,omitempty"`
 	Path                   string   `json:"path,omitempty"`
@@ -136,14 +148,18 @@ type HealthCheck struct {
 	Command                *Command `json:"command,omitempty"`
 }
 
+// Command is command for health check
 type Command struct {
 	Value string `json:"value,omitempty"`
 }
 
+// UpgradeStrategy has a minimumHealthCapacity which defines the minimum number of healty nodes
 type UpgradeStrategy struct {
 	MinimumHealthCapacity float64 `json:"minimumHealthCapacity,omitempty"`
 }
 
+// ServerInfo is info about the Marathon Instance
+// http://goo.gl/RSPWrw
 type ServerInfo struct {
 	FrameworkID     string           `json:"frameworkId,omitempty"`
 	Leader          string           `json:"leader,omitempty"`
@@ -155,17 +171,21 @@ type ServerInfo struct {
 	ZookeeperConfig *ZookeeperConfig `json:"zookeeper_config,omitempty"`
 }
 
+// HTTPConfig is http config for server info
 type HTTPConfig struct {
 	AssetsPath string `json:"assets_path,omitempty"`
 	HTTPPort   int    `json:"http_port,omitempty"`
 	HTTPSPort  int    `json:"https_port,omitempty"`
 }
 
+// EventSubscriber is described here:
+// http://goo.gl/02SuRT
 type EventSubscriber struct {
 	Type          string   `json:"type,omitempty"`
 	HTTPEndpoints []string `json:"http_endpoints,omitempty"`
 }
 
+// MarathonConfig is config about the marathon
 type MarathonConfig struct {
 	Checkpoint                 bool   `json:"checkpoint,omitempty"`
 	Executor                   string `json:"executor,omitempty"`
@@ -182,6 +202,7 @@ type MarathonConfig struct {
 	TaskLaunchTimeout          int    `json:"task_launch_timeout,omitempty"`
 }
 
+// ZookeeperConfig is config about the zookeeper
 type ZookeeperConfig struct {
 	ZK              string           `json:"zk,omitempty"`
 	ZKFutureTimeout *ZKFutureTimeout `json:"zk_future_timeout,omitempty"`
@@ -191,26 +212,51 @@ type ZookeeperConfig struct {
 	ZKTimeout       int              `json:"zk_timeout,omitempty"`
 }
 
+// ZKFutureTimeout is future timeout for zookeeper
 type ZKFutureTimeout struct {
 	Duration int `json:"duration,omitempty"`
 }
 
+// Embed is embed parameter
 type Embed int
 
+// Embed const
 const (
-	None Embed = iota
+	NoneEmbed Embed = iota
 	AppsTasks
 	AppsFailures
 )
 
 func (e Embed) String() string {
 	switch e {
-	case None:
+	case NoneEmbed:
 		return "none"
 	case AppsTasks:
 		return "apps.tasks"
 	case AppsFailures:
 		return "apps.failures"
+	}
+	return ""
+}
+
+// Status is status parameter
+type Status int
+
+// Status const
+const (
+	NoneStatus Status = iota
+	Running
+	Staging
+)
+
+func (s Status) String() string {
+	switch s {
+	case NoneStatus:
+		return "none"
+	case Running:
+		return "running"
+	case Staging:
+		return "staging"
 	}
 	return ""
 }
