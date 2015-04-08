@@ -146,11 +146,15 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 func (c *Client) unmarshalJSON(options *RequestOptions, successCodes []int, v interface{}) error {
 	data, code, err := c.request(options)
 	if err != nil {
-		log.Debugf("err: %s\n", err)
+		log.WithFields(log.Fields{
+			"error":   err,
+			"options": options,
+		}).Error("Request has failed")
 		return err
 	}
-	log.Debugf("response data: %s\n", data)
+	log.WithField("json", fmt.Sprintf("%s", data)).Debug("reponse json")
 	if !containsCode(successCodes, code) {
+		log.WithField("status code", code).Error("Got unsuccessed status code")
 		return fmt.Errorf("status code : %d, data: %s", code, data)
 	}
 	if err := json.Unmarshal(data, &v); err != nil {
@@ -165,6 +169,7 @@ func (c *Client) requestAndCheckSucc(options *RequestOptions, successCodes []int
 		return err
 	}
 	if !containsCode(successCodes, code) {
+		log.WithField("status code", code).Error("Got unsuccessed status code")
 		return fmt.Errorf("status code : %d", code)
 	}
 	return nil
