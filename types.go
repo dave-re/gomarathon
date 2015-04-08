@@ -86,6 +86,14 @@ type Docker struct {
 	Network      string         `json:"network,omitempty"`
 	PortMappings []*PortMapping `json:"portMappings,omitempty"`
 	Volumes      []*Volume      `json:"volumes,omitempty"`
+	Privileged   bool           `json:"privileged,omitempty"`
+	Parameters   []*Parameter   `json:"parameters,omitempty"`
+}
+
+// Parameter is a generic (key, value) pair used in various places for parameters.
+type Parameter struct {
+	Key   string `json:"key,omitempty"`
+	Value string `json:"value,omitempty"`
 }
 
 // PortMapping is port mapping for docker container
