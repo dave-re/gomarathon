@@ -76,8 +76,9 @@ type Task struct {
 
 // Container is container parameters
 type Container struct {
-	Type   string  `json:"type,omitempty"`
-	Docker *Docker `json:"docker,omitempty"`
+	Type    string    `json:"type,omitempty"`
+	Docker  *Docker   `json:"docker,omitempty"`
+	Volumes []*Volume `json:"volumes,omitempty"`
 }
 
 // Docker options
@@ -85,7 +86,6 @@ type Docker struct {
 	Image        string         `json:"image,omitempty"`
 	Network      string         `json:"network,omitempty"`
 	PortMappings []*PortMapping `json:"portMappings,omitempty"`
-	Volumes      []*Volume      `json:"volumes,omitempty"`
 	Privileged   bool           `json:"privileged,omitempty"`
 	Parameters   []*Parameter   `json:"parameters,omitempty"`
 }
