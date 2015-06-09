@@ -200,9 +200,9 @@ type EventSubscriber struct {
 	HTTPEndpoints []string `json:"http_endpoints,omitempty"`
 }
 
-// MarthonEvent is base event of the marathon
+// MarathonEvent is base event of the marathon
 // http://goo.gl/vxuutX
-type MarthonEvent struct {
+type MarathonEvent struct {
 	EventType string `json:"eventType,omitempty"`
 	Timestamp string `json:"timestamp,omitempty"`
 }
@@ -210,7 +210,7 @@ type MarthonEvent struct {
 // StatusUpdateEvent is status update event of the mesos
 // http://goo.gl/vxuutX
 type StatusUpdateEvent struct {
-	MarthonEvent
+	MarathonEvent
 	SlaveID    string `json:"slaveId,omitempty"`
 	TaskID     string `json:"taskId,omitempty"`
 	TaskStatus string `json:"taskStatus,omitempty"`
@@ -223,7 +223,7 @@ type StatusUpdateEvent struct {
 // FrameworkMessageEvent is framework message event of the mesos
 // http://goo.gl/vxuutX
 type FrameworkMessageEvent struct {
-	MarthonEvent
+	MarathonEvent
 	SlaveID    string `json:"slaveId,omitempty"`
 	ExecutorID string `json:"executorId,omitempty"`
 	Message    string `json:"message,omitempty"`
@@ -232,7 +232,7 @@ type FrameworkMessageEvent struct {
 // SubscriptionEvent is subscription event of the marathon
 // http://goo.gl/vxuutX
 type SubscriptionEvent struct {
-	MarthonEvent
+	MarathonEvent
 	ClientIP    string `json:"clientIp,omitempty"`
 	CallbackURL string `json:"callbackUrl,omitempty"`
 }
@@ -240,7 +240,7 @@ type SubscriptionEvent struct {
 // HealthCheckEvent is health check event of the marathon
 // http://goo.gl/vxuutX
 type HealthCheckEvent struct {
-	MarthonEvent
+	MarathonEvent
 	AppID       string       `json:"appId,omitempty"`
 	TaskID      string       `json:"taskId,omitempty"`
 	Version     string       `json:"version,omitempty"`
@@ -251,7 +251,7 @@ type HealthCheckEvent struct {
 // DeploymentsEvent is deployments event of the marathon
 // http://goo.gl/vxuutX
 type DeploymentsEvent struct {
-	MarthonEvent
+	MarathonEvent
 	ID          string          `json:"id,omitempty"`
 	GroupID     string          `json:"groupId,omitempty"`
 	Version     string          `json:"version,omitempty"`
