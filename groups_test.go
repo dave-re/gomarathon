@@ -22,7 +22,7 @@ func TestCreateGroup(t *testing.T) {
 				Container: &Container{
 					Type: "DOCKER",
 					Docker: &Docker{
-						Image: "nginx:latest",
+						Image: dockerAppImage,
 					},
 				},
 			},
@@ -46,7 +46,7 @@ func TestUpdateGroup(t *testing.T) {
 				Container: &Container{
 					Type: "DOCKER",
 					Docker: &Docker{
-						Image: "nginx:latest",
+						Image: dockerAppImage,
 					},
 				},
 			},

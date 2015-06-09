@@ -22,32 +22,37 @@ type Parameters struct {
 // Application is marathon application
 // http://goo.gl/MNP22N
 type Application struct {
-	ID              string            `json:"id,omitempty"`
-	Cmd             string            `json:"cmd,omitempty"`
-	Args            []string          `json:"args,omitempty"`
-	User            string            `json:"user,omitempty"`
-	Container       *Container        `json:"container,omitempty"`
-	CPUs            float64           `json:"cpus,omitempty"`
-	Mem             float64           `json:"mem,omitempty"`
-	Disk            float64           `json:"disk,omitempty"`
-	Deployments     []*Deployment     `json:"deployments,omitempty"`
-	Env             map[string]string `json:"env"`
-	Executor        string            `json:"executor,omitempty"`
-	Constraints     [][]string        `json:"constraints,omitempty"`
-	HealthChecks    []*HealthCheck    `json:"healthChecks,omitempty"`
-	Instances       int               `json:"instances,omitemptys"`
-	Ports           []int             `json:"ports,omitempty"`
-	RequirePorts    bool              `json:"requirePorts,omitempty"`
-	BackoffSeconds  int               `json:"backoffSeconds,omitempty"`
-	BackoffFactor   float64           `json:"backoffFactor,omitempty"`
-	TasksRunning    int               `json:"tasksRunning,omitempty"`
-	TasksStaged     int               `json:"tasksStaged,omitempty"`
-	Uris            []string          `json:"uris,omitempty"`
-	StoreUris       []string          `json:"storeUris,omitempty"`
-	Dependencies    []string          `json:"dependencies,omitempty"`
-	UpgradeStrategy *UpgradeStrategy  `json:"upgradeStrategy,omitempty"`
-	Version         string            `json:"version,omitempty"`
-	Tasks           []*Task           `json:"tasks,omitempty"`
+	ID                    string            `json:"id,omitempty"`
+	Cmd                   string            `json:"cmd,omitempty"`
+	Args                  []string          `json:"args,omitempty"`
+	User                  string            `json:"user,omitempty"`
+	Container             *Container        `json:"container,omitempty"`
+	Env                   map[string]string `json:"env,omitempty"`
+	Instances             int               `json:"instances,omitempty"`
+	CPUs                  float64           `json:"cpus,omitempty"`
+	Mem                   float64           `json:"mem,omitempty"`
+	Disk                  float64           `json:"disk,omitempty"`
+	Executor              string            `json:"executor,omitempty"`
+	Constraints           [][]string        `json:"constraints,omitempty"`
+	Uris                  []string          `json:"uris,omitempty"`
+	StoreUrls             []string          `json:"storeUrls,omitempty"`
+	Ports                 []int             `json:"ports,omitempty"`
+	RequirePorts          bool              `json:"requirePorts,omitempty"`
+	BackoffSeconds        int               `json:"backoffSeconds,omitempty"`
+	BackoffFactor         float64           `json:"backoffFactor,omitempty"`
+	MaxLaunchDelaySeconds int               `json:"maxLaunchDelaySeconds,omitempty"`
+	TasksRunning          int               `json:"tasksRunning,omitempty"`
+	TasksHealthy          int               `json:"tasksHealthy,omitempty"`
+	TasksUnhealthy        int               `json:"tasksUnhealthy,omitempty"`
+	TasksStaged           int               `json:"tasksStaged,omitempty"`
+	HealthChecks          []*HealthCheck    `json:"healthChecks,omitempty"`
+	Dependencies          []string          `json:"dependencies,omitempty"`
+	UpgradeStrategy       *UpgradeStrategy  `json:"upgradeStrategy,omitempty"`
+	Labels                map[string]string `json:"labels,omitempty"`
+	Deployments           []*Deployment     `json:"deployments,omitempty"`
+	Version               string            `json:"version,omitempty"`
+	Tasks                 []*Task           `json:"tasks,omitempty"`
+	LastTaskFailure       *TaskFailure      `json:"lastTaskFailure,omitempty"`
 }
 
 // Group is marathon group
@@ -83,11 +88,12 @@ type Container struct {
 
 // Docker options
 type Docker struct {
-	Image        string         `json:"image,omitempty"`
-	Network      string         `json:"network,omitempty"`
-	PortMappings []*PortMapping `json:"portMappings,omitempty"`
-	Privileged   bool           `json:"privileged,omitempty"`
-	Parameters   []*Parameter   `json:"parameters,omitempty"`
+	Image          string         `json:"image,omitempty"`
+	Network        string         `json:"network,omitempty"`
+	PortMappings   []*PortMapping `json:"portMappings,omitempty"`
+	Privileged     bool           `json:"privileged,omitempty"`
+	Parameters     []*Parameter   `json:"parameters,omitempty"`
+	ForcePullImage bool           `json:"forcePullImage,omitempty"`
 }
 
 // Parameter is a generic (key, value) pair used in various places for parameters.
@@ -129,7 +135,7 @@ type Step []*Action
 // Action is Action for deployment
 type Action struct {
 	Action string `json:"action,omitempty"`
-	Apps   string `json:"apps,omitempty"`
+	App    string `json:"app,omitempty"`
 }
 
 // TaskQueue is Action for queue
@@ -147,13 +153,14 @@ type Delay struct {
 // http://goo.gl/0GVD6o
 type HealthCheck struct {
 	Protocol               string   `json:"protocol,omitempty"`
-	Path                   string   `json:"path,omitempty"`
+	PortIndex              int      `json:"portIndex,omitempty"`
 	GracePeriodSeconds     int      `json:"gracePeriodSeconds,omitempty"`
 	IntervalSeconds        int      `json:"intervalSeconds,omitempty"`
-	PortIndex              int      `json:"portIndex,omitempty"`
 	TimeoutSeconds         int      `json:"timeoutSeconds,omitempty"`
+	Path                   string   `json:"path,omitempty"`
 	MaxConsecutiveFailures int      `json:"maxConsecutiveFailures,omitempty"`
 	Command                *Command `json:"command,omitempty"`
+	IgnoreHTTP1xx          bool     `json:"ignoreHttp1xx,omitempty"`
 }
 
 // Command is command for health check
@@ -193,6 +200,74 @@ type EventSubscriber struct {
 	HTTPEndpoints []string `json:"http_endpoints,omitempty"`
 }
 
+// MarthonEvent is base event of the marathon
+// http://goo.gl/vxuutX
+type MarthonEvent struct {
+	EventType string `json:"eventType,omitempty"`
+	Timestamp string `json:"timestamp,omitempty"`
+}
+
+// StatusUpdateEvent is status update event of the mesos
+// http://goo.gl/vxuutX
+type StatusUpdateEvent struct {
+	MarthonEvent
+	SlaveID    string `json:"slaveId,omitempty"`
+	TaskID     string `json:"taskId,omitempty"`
+	TaskStatus string `json:"taskStatus,omitempty"`
+	AppID      string `json:"appId,omitempty"`
+	Host       string `json:"host,omitempty"`
+	Ports      []int  `json:"ports,omitempty"`
+	Version    string `json:"version,omitempty"`
+}
+
+// FrameworkMessageEvent is framework message event of the mesos
+// http://goo.gl/vxuutX
+type FrameworkMessageEvent struct {
+	MarthonEvent
+	SlaveID    string `json:"slaveId,omitempty"`
+	ExecutorID string `json:"executorId,omitempty"`
+	Message    string `json:"message,omitempty"`
+}
+
+// SubscriptionEvent is subscription event of the marathon
+// http://goo.gl/vxuutX
+type SubscriptionEvent struct {
+	MarthonEvent
+	ClientIP    string `json:"clientIp,omitempty"`
+	CallbackURL string `json:"callbackUrl,omitempty"`
+}
+
+// HealthCheckEvent is health check event of the marathon
+// http://goo.gl/vxuutX
+type HealthCheckEvent struct {
+	MarthonEvent
+	AppID       string       `json:"appId,omitempty"`
+	TaskID      string       `json:"taskId,omitempty"`
+	Version     string       `json:"version,omitempty"`
+	Alive       bool         `json:"alive,omitempty"`
+	HealthCheck *HealthCheck `json:"healthCheck,omitempty"`
+}
+
+// DeploymentsEvent is deployments event of the marathon
+// http://goo.gl/vxuutX
+type DeploymentsEvent struct {
+	MarthonEvent
+	ID          string          `json:"id,omitempty"`
+	GroupID     string          `json:"groupId,omitempty"`
+	Version     string          `json:"version,omitempty"`
+	Reason      string          `json:"reason,omitempty"`
+	Plan        *DeploymentPlan `json:"plan,omitempty"`
+	CurrentStep *Action         `json:"currentStep,omitempty"`
+}
+
+type DeploymentPlan struct {
+	ID       string    `json:"id,omitempty"`
+	Original *Group    `json:"original,omitempty"`
+	Target   *Group    `json:"target,omitempty"`
+	Steps    []*Action `json:"steps,omitempty"`
+	Version  string    `json:"version,omitempty"`
+}
+
 // MarathonConfig is config about the marathon
 type MarathonConfig struct {
 	Checkpoint                 bool   `json:"checkpoint,omitempty"`
@@ -223,6 +298,17 @@ type ZookeeperConfig struct {
 // ZKFutureTimeout is future timeout for zookeeper
 type ZKFutureTimeout struct {
 	Duration int `json:"duration,omitempty"`
+}
+
+// TaskFailure is task that has failed
+type TaskFailure struct {
+	AppID     string `json:"appId,omitempty"`
+	Host      string `json:"host,omitempty"`
+	Message   string `json:"message,omitempty"`
+	State     string `json:"state,omitempty"`
+	TaskID    string `json:"taskId,omitempty"`
+	Timestamp string `json:"timestamp,omitempty"`
+	Version   string `json:"version,omitempty"`
 }
 
 // Embed is embed parameter

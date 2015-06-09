@@ -61,6 +61,7 @@ func (c *Client) do(method, path string, data interface{}) ([]byte, int, error) 
 		if err != nil {
 			return nil, -1, err
 		}
+		log.WithField("json", fmt.Sprintf("%s", buf)).Debug("request body")
 		params = bytes.NewBuffer(buf)
 	}
 
@@ -75,6 +76,8 @@ func (c *Client) do(method, path string, data interface{}) ([]byte, int, error) 
 	if c.username != "" && c.password != "" {
 		req.SetBasicAuth(c.username, c.password)
 	}
+
+	log.WithField("header", fmt.Sprintf("%#+v", req.Header)).Debug("request header")
 
 	resp, err = c.httpClient.Do(req)
 	if err != nil {
@@ -148,7 +151,7 @@ func (c *Client) unmarshalJSON(options *RequestOptions, successCodes []int, v in
 	if err != nil {
 		log.WithFields(log.Fields{
 			"error":   err,
-			"options": options,
+			"options": fmt.Sprintf("%#+v", options),
 		}).Error("Request has failed")
 		return err
 	}

@@ -1,10 +1,24 @@
 package gomarathon
 
-import "testing"
+import (
+	"os"
+	"testing"
+
+	log "github.com/Sirupsen/logrus"
+)
+
+const (
+	dockerAppImage = "mdock.daumkakao.io/nginx:latest"
+)
 
 var (
-	client, _ = NewClient("http://localdocker:8080", nil)
+	client *Client
 )
+
+func init() {
+	SetLogLevel(log.DebugLevel)
+	client, _ = NewClient(os.Getenv("MARATHON_URL"), nil)
+}
 
 func createApp(id string) {
 	client.CreateApp(&Application{
@@ -15,7 +29,7 @@ func createApp(id string) {
 		Container: &Container{
 			Type: "DOCKER",
 			Docker: &Docker{
-				Image: "nginx:latest",
+				Image: dockerAppImage,
 			},
 		},
 	})
@@ -26,7 +40,7 @@ func destroyApp(id string) {
 }
 
 func TestNewClient(t *testing.T) {
-	_, err := NewClient("http://localdocker:8080", nil)
+	_, err := NewClient(os.Getenv("MARATHON_URL"), nil)
 	if err != nil {
 		t.Error(err)
 	}

@@ -19,7 +19,7 @@ func TestCreateApp(t *testing.T) {
 		Container: &Container{
 			Type: "DOCKER",
 			Docker: &Docker{
-				Image: "nginx:latest",
+				Image: dockerAppImage,
 			},
 		},
 	}); err != nil {

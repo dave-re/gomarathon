@@ -25,7 +25,7 @@ func TestCancelDeployment(t *testing.T) {
 		t.Error(err)
 	}
 
-	if deploymentID, version, err := client.CancelDeployment(deployments[0].ID, false); err != nil {
+	if deploymentID, version, err := client.CancelDeployment(deployments[0].ID); err != nil {
 		t.Error(err)
 	} else {
 		log.Debugf("DeploymentID: %s\n", deploymentID)
