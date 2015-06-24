@@ -72,7 +72,9 @@ func (c *Client) do(method, path string, data interface{}) ([]byte, int, error) 
 
 	// Prepare and do the request
 	req.Header.Set("User-Agent", "gomarathon")
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+
 	if c.username != "" && c.password != "" {
 		req.SetBasicAuth(c.username, c.password)
 	}
