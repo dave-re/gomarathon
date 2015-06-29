@@ -3,6 +3,13 @@ package gomarathon
 import (
 	"fmt"
 	"net/http"
+	"time"
+
+	"github.daumkakao.com/DKOS/dkos/errors"
+)
+
+const (
+	findDeployTimeoutDuration = 1 * time.Minute
 )
 
 // GetAppsParams is parameters for GetAppsWithParams function
@@ -28,6 +35,16 @@ func (c *Client) CreateApp(app *Application) (resApp *Application, err error) {
 	resApp = &Application{}
 	err = c.unmarshalJSON(options, []int{http.StatusCreated}, resApp)
 	return
+}
+
+// CreateAppAndFindDeployment create and start a new application and find deployment id.
+// http://goo.gl/fM0CLu
+func (c *Client) CreateAppAndFindDeployment(app *Application) (deploymentID, version string, err error) {
+	respApp, err := c.CreateApp(app)
+	if err != nil {
+		return "", "", err
+	}
+	return c.findDeployment(respApp.ID)
 }
 
 // GetApps gets all running applications
@@ -211,5 +228,46 @@ func (c *Client) KillTaskWithParams(appID, taskID string, scale bool) (task *Tas
 	resp := &response{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
 	task = resp.Task
+	return
+}
+
+func (c *Client) findDeployment(appID string) (deploymentID, version string, err error) {
+	var deployment *Deployment
+	doneCh := make(chan error)
+
+	go func() {
+		time.Sleep(time.Second)
+		deployments, err := c.GetDeployments()
+		if err != nil {
+			doneCh <- err
+			return
+		}
+
+		for _, deploy := range deployments {
+			for _, affectedAppID := range deploy.AffectedApps {
+				if affectedAppID == appID {
+					deployment = deploy
+					doneCh <- nil
+					return
+				}
+			}
+		}
+	}()
+
+	select {
+	case err = <-doneCh:
+	case <-time.After(findDeployTimeoutDuration):
+		err = errors.ErrFindingDeploymentHasTimedOut
+	}
+
+	if err == nil {
+		deploymentID = deployment.ID
+		version = deployment.Version
+	} else {
+		if app, err := c.GetApp(appID); err == nil {
+			version = app.Version
+		}
+	}
+
 	return
 }
