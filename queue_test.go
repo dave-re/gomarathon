@@ -3,7 +3,7 @@ package gomarathon
 import (
 	"testing"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 func TestGetTaskQueue(t *testing.T) {
@@ -12,7 +12,7 @@ func TestGetTaskQueue(t *testing.T) {
 		t.Error(err)
 	} else {
 		for _, taskQueue := range queue {
-			log.Debugf("TaskQueue: %#v\n", taskQueue)
+			logrus.Debugf("TaskQueue: %#v\n", taskQueue)
 		}
 	}
 	destroyApp("taskqueuetest1")

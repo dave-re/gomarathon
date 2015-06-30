@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 func TestTasks(t *testing.T) {
@@ -14,7 +14,7 @@ func TestTasks(t *testing.T) {
 		t.Error(err)
 	} else {
 		for _, task := range tasks {
-			log.Debugf("Task: %#v\n", task)
+			logrus.Debugf("Task: %#v\n", task)
 		}
 	}
 }

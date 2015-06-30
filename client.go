@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"net/url"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 // Actual version of the marathon api
@@ -28,8 +28,8 @@ type Client struct {
 }
 
 // SetLogLevel sets log level of client
-func SetLogLevel(logLevel log.Level) {
-	log.SetLevel(logLevel)
+func SetLogLevel(logLevel logrus.Level) {
+	logrus.SetLevel(logLevel)
 }
 
 // NewClient return a pointer to the new client
@@ -61,7 +61,7 @@ func (c *Client) do(method, path string, data interface{}) ([]byte, int, error) 
 		if err != nil {
 			return nil, -1, err
 		}
-		log.WithField("json", fmt.Sprintf("%s", buf)).Debug("request body")
+		logrus.WithField("json", fmt.Sprintf("%s", buf)).Debug("request body")
 		params = bytes.NewBuffer(buf)
 	}
 
@@ -79,7 +79,7 @@ func (c *Client) do(method, path string, data interface{}) ([]byte, int, error) 
 		req.SetBasicAuth(c.username, c.password)
 	}
 
-	log.WithField("header", fmt.Sprintf("%#+v", req.Header)).Debug("request header")
+	logrus.WithField("header", fmt.Sprintf("%#+v", req.Header)).Debug("request header")
 
 	resp, err = c.httpClient.Do(req)
 	if err != nil {
@@ -142,7 +142,7 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 		if params != "" {
 			path = fmt.Sprintf("%s?%s", path, v.Encode())
 		}
-		log.Debugf("path: %s\n", path)
+		logrus.Debugf("path: %s\n", path)
 	}
 
 	return c.do(options.Method, path, options.Datas)
@@ -151,15 +151,15 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 func (c *Client) unmarshalJSON(options *RequestOptions, successCodes []int, v interface{}) error {
 	data, code, err := c.request(options)
 	if err != nil {
-		log.WithFields(log.Fields{
+		logrus.WithFields(logrus.Fields{
 			"error":   err,
 			"options": fmt.Sprintf("%#+v", options),
 		}).Error("Request has failed")
 		return err
 	}
-	log.WithField("json", fmt.Sprintf("%s", data)).Debug("reponse json")
+	logrus.WithField("json", fmt.Sprintf("%s", data)).Debug("reponse json")
 	if !containsCode(successCodes, code) {
-		log.WithField("status code", code).Error("Got unsuccessed status code")
+		logrus.WithField("status code", code).Error("Got unsuccessed status code")
 		return fmt.Errorf("status code : %d, data: %s", code, data)
 	}
 	if err := json.Unmarshal(data, &v); err != nil {
@@ -174,7 +174,7 @@ func (c *Client) requestAndCheckSucc(options *RequestOptions, successCodes []int
 		return err
 	}
 	if !containsCode(successCodes, code) {
-		log.WithField("status code", code).Error("Got unsuccessed status code")
+		logrus.WithField("status code", code).Error("Got unsuccessed status code")
 		return fmt.Errorf("status code : %d", code)
 	}
 	return nil

@@ -3,7 +3,7 @@ package gomarathon
 import (
 	"testing"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 var (
@@ -30,8 +30,8 @@ func TestCreateGroup(t *testing.T) {
 	}); err != nil {
 		t.Error(err)
 	} else {
-		log.Debugf("DeploymentID: %s\n", deploymentID)
-		log.Debugf("Version: %s\n", version)
+		logrus.Debugf("DeploymentID: %s\n", deploymentID)
+		logrus.Debugf("Version: %s\n", version)
 	}
 }
 
@@ -54,8 +54,8 @@ func TestUpdateGroup(t *testing.T) {
 	}); err != nil {
 		t.Error(err)
 	} else {
-		log.Debugf("DeploymentID: %s\n", deploymentID)
-		log.Debugf("Version: %s\n", version)
+		logrus.Debugf("DeploymentID: %s\n", deploymentID)
+		logrus.Debugf("Version: %s\n", version)
 	}
 }
 
@@ -64,7 +64,7 @@ func TestGetGroups(t *testing.T) {
 		t.Error(err)
 	} else {
 		for _, group := range groups {
-			log.Debugf("Group: %#v\n", group)
+			logrus.Debugf("Group: %#v\n", group)
 		}
 	}
 }
@@ -73,7 +73,7 @@ func TestGetGroup(t *testing.T) {
 	if group, err := client.GetGroup(groupID); err != nil {
 		t.Error(err)
 	} else {
-		log.Debugf("Group: %#v\n", group)
+		logrus.Debugf("Group: %#v\n", group)
 	}
 }
 
@@ -81,7 +81,7 @@ func TestDestroyGroup(t *testing.T) {
 	if deploymentID, version, err := client.DestroyGroup(groupID); err != nil {
 		t.Error(err)
 	} else {
-		log.Debugf("DeploymentID: %s\n", deploymentID)
-		log.Debugf("Version: %s\n", version)
+		logrus.Debugf("DeploymentID: %s\n", deploymentID)
+		logrus.Debugf("Version: %s\n", version)
 	}
 }

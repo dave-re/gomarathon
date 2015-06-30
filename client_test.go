@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 const (
@@ -16,7 +16,7 @@ var (
 )
 
 func init() {
-	SetLogLevel(log.DebugLevel)
+	SetLogLevel(logrus.DebugLevel)
 	client, _ = NewClient(os.Getenv("MARATHON_URL"), nil)
 }
 

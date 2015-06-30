@@ -3,14 +3,14 @@ package gomarathon
 import (
 	"testing"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 func TestRegisterCallbackURL(t *testing.T) {
 	if response, err := client.RegisterCallbackURL("http://testgo.com"); err != nil {
 		t.Error(err)
 	} else {
-		log.Debugf("Response: %#v\n", response)
+		logrus.Debugf("Response: %#v\n", response)
 	}
 }
 
@@ -19,7 +19,7 @@ func TestGetCallbackURLs(t *testing.T) {
 		t.Error(err)
 	} else {
 		for _, callbackURL := range callbackURLs {
-			log.Debugf("callbackURL: %s\n", callbackURL)
+			logrus.Debugf("callbackURL: %s\n", callbackURL)
 		}
 	}
 }
@@ -28,6 +28,6 @@ func TestUnregisterCallbackURL(t *testing.T) {
 	if response, err := client.UnregisterCallbackURL("http://testgo.com"); err != nil {
 		t.Error(err)
 	} else {
-		log.Debugf("Response: %#v\n", response)
+		logrus.Debugf("Response: %#v\n", response)
 	}
 }

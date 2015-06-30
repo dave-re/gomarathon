@@ -1,11 +1,10 @@
 package gomarathon
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
-
-	"github.daumkakao.com/DKOS/dkos/errors"
 )
 
 const (
@@ -37,14 +36,14 @@ func (c *Client) CreateApp(app *Application) (resApp *Application, err error) {
 	return
 }
 
-// CreateAppAndFindDeployment create and start a new application and find deployment id.
+// CreateAppAndFindDeployment create and start a new application and find deployment info.
 // http://goo.gl/fM0CLu
 func (c *Client) CreateAppAndFindDeployment(app *Application) (deploymentID, version string, err error) {
 	respApp, err := c.CreateApp(app)
 	if err != nil {
 		return "", "", err
 	}
-	return c.findDeployment(respApp.ID)
+	return c.FindDeployment(respApp.ID)
 }
 
 // GetApps gets all running applications
@@ -231,7 +230,8 @@ func (c *Client) KillTaskWithParams(appID, taskID string, scale bool) (task *Tas
 	return
 }
 
-func (c *Client) findDeployment(appID string) (deploymentID, version string, err error) {
+// FindDeployment find deployment info for an app.
+func (c *Client) FindDeployment(appID string) (deploymentID, version string, err error) {
 	var deployment *Deployment
 	doneCh := make(chan error)
 
@@ -257,7 +257,7 @@ func (c *Client) findDeployment(appID string) (deploymentID, version string, err
 	select {
 	case err = <-doneCh:
 	case <-time.After(findDeployTimeoutDuration):
-		err = errors.ErrFindingDeploymentHasTimedOut
+		err = errors.New("Finding deployment has timed out")
 	}
 
 	if err == nil {
