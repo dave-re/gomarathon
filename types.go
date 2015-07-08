@@ -55,6 +55,23 @@ type Application struct {
 	LastTaskFailure       *TaskFailure      `json:"lastTaskFailure,omitempty"`
 }
 
+// GetStatus returns current status of an app
+func (app *Application) GetStatus() AppStatus {
+	switch {
+	case (app.Instances == app.TasksHealthy) && (app.TasksHealthy == app.TasksRunning):
+		return Healthy
+	case (app.Instances > app.TasksRunning) || ((app.TasksHealthy == app.TasksRunning) && (app.TasksRunning != app.Instances)):
+		if app.TasksRunning == 0 {
+			return Creating
+		}
+		return Updating
+	case (app.TasksHealthy != app.TasksRunning):
+		return UnHealthy
+	default:
+		return AppStatusNone
+	}
+}
+
 // Group is marathon group
 // http://goo.gl/6n6FSI
 type Group struct {
