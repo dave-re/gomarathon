@@ -71,6 +71,16 @@ func (c *Client) GetAppsWithParams(params *GetAppsParams) (apps []*Application, 
 	return
 }
 
+// ExistApp gets whether the application does exist
+func (c *Client) ExistApp(appID string) bool {
+	options := &RequestOptions{
+		Path:   fmt.Sprintf("apps/%s", appID),
+		Method: "GET",
+	}
+	err := c.requestAndCheckSucc(options, []int{http.StatusOK})
+	return (err == nil)
+}
+
 // GetApp gets the application with appID
 // http://goo.gl/4pbxGV
 func (c *Client) GetApp(appID string) (app *Application, err error) {
