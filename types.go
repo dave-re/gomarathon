@@ -57,18 +57,18 @@ type Application struct {
 
 // GetStatus returns current status of an app
 func (app *Application) GetStatus() AppStatus {
+	if app.Instances == 0 {
+		return AppStatusNone
+	}
 	switch {
 	case (app.Instances == app.TasksHealthy) && (app.TasksHealthy == app.TasksRunning):
 		return AppStatusHealthy
-	case (app.Instances > app.TasksRunning) || ((app.TasksHealthy == app.TasksRunning) && (app.TasksRunning != app.Instances)):
-		if app.TasksRunning == 0 {
-			return AppStatusCreating
-		}
-		return AppStatusUpdating
-	case (app.TasksHealthy != app.TasksRunning):
+	case (app.TasksUnhealthy > 0):
 		return AppStatusUnHealthy
+	case (app.TasksHealthy == 0):
+		return AppStatusCreating
 	default:
-		return AppStatusNone
+		return AppStatusUpdating
 	}
 }
 
