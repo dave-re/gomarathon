@@ -383,36 +383,3 @@ type response struct {
 	CallbackUrls []string       `json:"callbackUrls,omitempty"`
 	Queue        []*TaskQueue   `json:"queue,omitempty"`
 }
-
-// AppStatus is app's status
-type AppStatus int
-
-// AppStatus const
-const (
-	AppStatusNone AppStatus = iota
-	AppStatusHealthy
-	AppStatusUnHealthy
-	AppStatusCreating
-	AppStatusUpdating
-)
-
-func (s AppStatus) String() string {
-	switch s {
-	case AppStatusNone:
-		return "none"
-	case AppStatusHealthy:
-		return "healthy"
-	case AppStatusUnHealthy:
-		return "staging"
-	case AppStatusCreating:
-		return "creating"
-	case AppStatusUpdating:
-		return "updating"
-	}
-	return ""
-}
-
-// IsScaling represents whether an app is scaling
-func (s AppStatus) IsScaling() bool {
-	return s == AppStatusCreating || s == AppStatusUpdating
-}
