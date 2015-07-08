@@ -7,7 +7,7 @@ import (
 // GetTasks gets tasks of all applications
 // http://goo.gl/TJYJmS
 func (c *Client) GetTasks() (tasks []*Task, err error) {
-	return c.GetTasksWithParams(NoneStatus)
+	return c.GetTasksWithParams(StatusNone)
 }
 
 // GetTasksWithParams gets tasks of all applications with parameters

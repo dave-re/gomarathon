@@ -59,14 +59,14 @@ type Application struct {
 func (app *Application) GetStatus() AppStatus {
 	switch {
 	case (app.Instances == app.TasksHealthy) && (app.TasksHealthy == app.TasksRunning):
-		return Healthy
+		return AppStatusHealthy
 	case (app.Instances > app.TasksRunning) || ((app.TasksHealthy == app.TasksRunning) && (app.TasksRunning != app.Instances)):
 		if app.TasksRunning == 0 {
-			return Creating
+			return AppStatusCreating
 		}
-		return Updating
+		return AppStatusUpdating
 	case (app.TasksHealthy != app.TasksRunning):
-		return UnHealthy
+		return AppStatusUnHealthy
 	default:
 		return AppStatusNone
 	}
@@ -355,18 +355,18 @@ type Status int
 
 // Status const
 const (
-	NoneStatus Status = iota
-	Running
-	Staging
+	StatusNone Status = iota
+	StatusRunning
+	StatusStaging
 )
 
 func (s Status) String() string {
 	switch s {
-	case NoneStatus:
+	case StatusNone:
 		return "none"
-	case Running:
+	case StatusRunning:
 		return "running"
-	case Staging:
+	case StatusStaging:
 		return "staging"
 	}
 	return ""
@@ -390,23 +390,23 @@ type AppStatus int
 // AppStatus const
 const (
 	AppStatusNone AppStatus = iota
-	Healthy
-	UnHealthy
-	Creating
-	Updating
+	AppStatusHealthy
+	AppStatusUnHealthy
+	AppStatusCreating
+	AppStatusUpdating
 )
 
 func (s AppStatus) String() string {
 	switch s {
 	case AppStatusNone:
 		return "none"
-	case Healthy:
+	case AppStatusHealthy:
 		return "healthy"
-	case UnHealthy:
+	case AppStatusUnHealthy:
 		return "staging"
-	case Creating:
+	case AppStatusCreating:
 		return "creating"
-	case Updating:
+	case AppStatusUpdating:
 		return "updating"
 	}
 	return ""
@@ -414,5 +414,5 @@ func (s AppStatus) String() string {
 
 // IsScaling represents whether an app is scaling
 func (s AppStatus) IsScaling() bool {
-	return s == Creating || s == Updating
+	return s == AppStatusCreating || s == AppStatusUpdating
 }

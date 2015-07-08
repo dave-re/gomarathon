@@ -134,7 +134,7 @@ func (c *Client) request(options *RequestOptions) ([]byte, int, error) {
 			v.Set("force", "true")
 		}
 
-		if options.Params.Status != NoneStatus {
+		if options.Params.Status != StatusNone {
 			v.Set("status", options.Params.Status.String())
 		}
 
