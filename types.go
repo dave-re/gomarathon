@@ -147,7 +147,9 @@ type Deployment struct {
 }
 
 // Step is step for deployment
-type Step []*Action
+type Step struct {
+	Actions []*Action `json:"actions,omitempty"`
+}
 
 // Action is Action for deployment
 type Action struct {
@@ -274,15 +276,15 @@ type DeploymentsEvent struct {
 	Version     string          `json:"version,omitempty"`
 	Reason      string          `json:"reason,omitempty"`
 	Plan        *DeploymentPlan `json:"plan,omitempty"`
-	CurrentStep *Action         `json:"currentStep,omitempty"`
+	CurrentStep *Step           `json:"currentStep,omitempty"`
 }
 
 type DeploymentPlan struct {
-	ID       string    `json:"id,omitempty"`
-	Original *Group    `json:"original,omitempty"`
-	Target   *Group    `json:"target,omitempty"`
-	Steps    []*Action `json:"steps,omitempty"`
-	Version  string    `json:"version,omitempty"`
+	ID       string  `json:"id,omitempty"`
+	Original *Group  `json:"original,omitempty"`
+	Target   *Group  `json:"target,omitempty"`
+	Steps    []*Step `json:"steps,omitempty"`
+	Version  string  `json:"version,omitempty"`
 }
 
 // MarathonConfig is config about the marathon
