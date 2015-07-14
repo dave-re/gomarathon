@@ -153,8 +153,8 @@ type Step struct {
 
 // Action is Action for deployment
 type Action struct {
-	Action string `json:"action,omitempty"`
-	App    string `json:"app,omitempty"`
+	Type string `json:"type,omitempty"`
+	App  string `json:"app,omitempty"`
 }
 
 // TaskQueue is Action for queue
