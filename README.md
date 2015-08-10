@@ -7,4 +7,4 @@ go client for [marathon](http://mesosphere.github.io/marathon)
 
 Versions:
 
-- compatible with **marathon v0.8.2**
+- compatible with **marathon v0.9.0**
