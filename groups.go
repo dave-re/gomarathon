@@ -63,9 +63,16 @@ func (c *Client) GetGroup(groupID string) (group *Group, err error) {
 // DestroyGroup destroy a group
 // http://goo.gl/bYQGu4
 func (c *Client) DestroyGroup(groupID string) (deploymentID, version string, err error) {
+	return c.DestroyGroupWithParams(groupID, false)
+}
+
+// DestroyGroupWithParams destroy a group
+// http://goo.gl/bYQGu4
+func (c *Client) DestroyGroupWithParams(groupID string, force bool) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("groups/%s", groupID),
 		Method: "DELETE",
+		Params: &Parameters{Force: force},
 	}
 	resp := &response{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
