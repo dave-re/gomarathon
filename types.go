@@ -190,6 +190,7 @@ type Command struct {
 // UpgradeStrategy has a minimumHealthCapacity which defines the minimum number of healty nodes
 type UpgradeStrategy struct {
 	MinimumHealthCapacity float64 `json:"minimumHealthCapacity,omitempty"`
+	MaximumOverCapacity   float64 `json:"maximumOverCapacity,omitempty"`
 }
 
 // ServerInfo is info about the Marathon Instance
