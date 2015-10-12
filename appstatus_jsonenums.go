@@ -9,19 +9,19 @@ import (
 
 var (
 	_AppStatusNameToValue = map[string]AppStatus{
-		"AppStatusNone":      AppStatusNone,
-		"AppStatusHealthy":   AppStatusHealthy,
-		"AppStatusUnHealthy": AppStatusUnHealthy,
-		"AppStatusScaling":   AppStatusScaling,
-		"AppStatusRunning":   AppStatusRunning,
+		"None":      AppStatusNone,
+		"Healthy":   AppStatusHealthy,
+		"UnHealthy": AppStatusUnHealthy,
+		"Scaling":   AppStatusScaling,
+		"Running":   AppStatusRunning,
 	}
 
 	_AppStatusValueToName = map[AppStatus]string{
-		AppStatusNone:      "AppStatusNone",
-		AppStatusHealthy:   "AppStatusHealthy",
-		AppStatusUnHealthy: "AppStatusUnHealthy",
-		AppStatusScaling:   "AppStatusScaling",
-		AppStatusRunning:   "AppStatusRunning",
+		AppStatusNone:      "None",
+		AppStatusHealthy:   "Healthy",
+		AppStatusUnHealthy: "UnHealthy",
+		AppStatusScaling:   "Scaling",
+		AppStatusRunning:   "Running",
 	}
 )
 
