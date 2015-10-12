@@ -10,15 +10,10 @@ const (
 	AppStatusNone AppStatus = iota
 	AppStatusHealthy
 	AppStatusUnHealthy
-	AppStatusCreating
-	AppStatusUpdating
+	AppStatusScaling
+	AppStatusRunning
 )
 
 func (s AppStatus) String() string {
 	return strings.ToLower(_AppStatusValueToName[s])
-}
-
-// IsScaling represents whether an app is scaling
-func (s AppStatus) IsScaling() bool {
-	return s == AppStatusCreating || s == AppStatusUpdating
 }

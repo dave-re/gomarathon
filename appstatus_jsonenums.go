@@ -9,19 +9,19 @@ import (
 
 var (
 	_AppStatusNameToValue = map[string]AppStatus{
-		"None":      AppStatusNone,
-		"Healthy":   AppStatusHealthy,
-		"UnHealthy": AppStatusUnHealthy,
-		"Creating":  AppStatusCreating,
-		"Updating":  AppStatusUpdating,
+		"AppStatusNone":      AppStatusNone,
+		"AppStatusHealthy":   AppStatusHealthy,
+		"AppStatusUnHealthy": AppStatusUnHealthy,
+		"AppStatusScaling":   AppStatusScaling,
+		"AppStatusRunning":   AppStatusRunning,
 	}
 
 	_AppStatusValueToName = map[AppStatus]string{
-		AppStatusNone:      "None",
-		AppStatusHealthy:   "Healthy",
-		AppStatusUnHealthy: "UnHealthy",
-		AppStatusCreating:  "Creating",
-		AppStatusUpdating:  "Updating",
+		AppStatusNone:      "AppStatusNone",
+		AppStatusHealthy:   "AppStatusHealthy",
+		AppStatusUnHealthy: "AppStatusUnHealthy",
+		AppStatusScaling:   "AppStatusScaling",
+		AppStatusRunning:   "AppStatusRunning",
 	}
 )
 
@@ -32,8 +32,8 @@ func init() {
 			interface{}(AppStatusNone).(fmt.Stringer).String():      AppStatusNone,
 			interface{}(AppStatusHealthy).(fmt.Stringer).String():   AppStatusHealthy,
 			interface{}(AppStatusUnHealthy).(fmt.Stringer).String(): AppStatusUnHealthy,
-			interface{}(AppStatusCreating).(fmt.Stringer).String():  AppStatusCreating,
-			interface{}(AppStatusUpdating).(fmt.Stringer).String():  AppStatusUpdating,
+			interface{}(AppStatusScaling).(fmt.Stringer).String():   AppStatusScaling,
+			interface{}(AppStatusRunning).(fmt.Stringer).String():   AppStatusRunning,
 		}
 	}
 }
