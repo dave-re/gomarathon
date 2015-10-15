@@ -55,32 +55,6 @@ type Application struct {
 	LastTaskFailure       *TaskFailure      `json:"lastTaskFailure,omitempty"`
 }
 
-// GetStatus returns current status of an app
-func (app *Application) GetStatus() AppStatus {
-	if app.Instances == 0 {
-		return AppStatusNone
-	}
-	if app.Deployments != nil && len(app.Deployments) > 0 {
-		return AppStatusScaling
-	}
-	if app.HealthChecks != nil && len(app.HealthChecks) > 0 {
-		switch {
-		case (app.Instances == app.TasksHealthy) && (app.TasksHealthy == app.TasksRunning):
-			return AppStatusHealthy
-		case (app.TasksUnhealthy > 0):
-			return AppStatusUnHealthy
-		}
-	} else {
-		switch {
-		case app.Instances == app.TasksRunning:
-			return AppStatusRunning
-		default:
-			return AppStatusUnHealthy
-		}
-	}
-	return AppStatusNone
-}
-
 // Group is marathon group
 // http://goo.gl/6n6FSI
 type Group struct {
