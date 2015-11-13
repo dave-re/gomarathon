@@ -285,7 +285,7 @@ func (c *Client) FindDeployment(appID string) (deploymentID, version string, err
 // GetStatus returns current status of an app
 func (app *Application) GetStatus() AppStatus {
 	if app.Instances == 0 {
-		return AppStatusNone
+		return AppStatusUnHealthy
 	}
 	if app.HealthChecks != nil && len(app.HealthChecks) > 0 {
 		if (app.Instances == app.TasksHealthy) && (app.TasksHealthy == app.TasksRunning) {
