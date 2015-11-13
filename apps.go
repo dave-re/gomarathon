@@ -287,9 +287,6 @@ func (app *Application) GetStatus() AppStatus {
 	if app.Instances == 0 {
 		return AppStatusNone
 	}
-	if app.Deployments != nil && len(app.Deployments) > 0 {
-		return AppStatusScaling
-	}
 	if app.HealthChecks != nil && len(app.HealthChecks) > 0 {
 		if (app.Instances == app.TasksHealthy) && (app.TasksHealthy == app.TasksRunning) {
 			return AppStatusHealthy
@@ -298,6 +295,9 @@ func (app *Application) GetStatus() AppStatus {
 		if app.Instances == app.TasksRunning {
 			return AppStatusRunning
 		}
+	}
+	if app.Deployments != nil && len(app.Deployments) > 0 {
+		return AppStatusScaling
 	}
 	return AppStatusUnHealthy
 }
