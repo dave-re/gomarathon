@@ -156,6 +156,7 @@ type Delay struct {
 type HealthCheck struct {
 	Protocol               string   `json:"protocol,omitempty"`
 	PortIndex              int      `json:"portIndex,omitempty"`
+	Port                   int      `json:"port,omitempty"`
 	GracePeriodSeconds     int      `json:"gracePeriodSeconds,omitempty"`
 	IntervalSeconds        int      `json:"intervalSeconds,omitempty"`
 	TimeoutSeconds         int      `json:"timeoutSeconds,omitempty"`
