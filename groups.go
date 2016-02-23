@@ -7,11 +7,12 @@ import (
 
 // CreateGroup create and start a new application group
 // http://goo.gl/Q5n2OB
-func (c *Client) CreateGroup(group *Group) (deploymentID, version string, err error) {
+func (c *Client) CreateGroup(group *Group, force bool) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   "groups",
 		Datas:  group,
 		Method: "POST",
+		Params: &Parameters{Force: force},
 	}
 	resp := &response{}
 	err = c.unmarshalJSON(options, []int{http.StatusCreated}, resp)
