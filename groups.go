@@ -7,7 +7,13 @@ import (
 
 // CreateGroup create and start a new application group
 // http://goo.gl/Q5n2OB
-func (c *Client) CreateGroup(group *Group, force bool) (deploymentID, version string, err error) {
+func (c *Client) CreateGroup(group *Group) (deploymentID, version string, err error) {
+	return c.CreateGroupWithParams(group, false)
+}
+
+// CreateGroupWithParams create and start a new application group with parameters
+// http://goo.gl/Q5n2OB
+func (c *Client) CreateGroupWithParams(group *Group, force bool) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   "groups",
 		Datas:  group,
