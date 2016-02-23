@@ -30,10 +30,17 @@ func (c *Client) CreateGroupWithParams(group *Group, force bool) (deploymentID, 
 // UpdateGroup change parameters of a deployed application group
 // http://goo.gl/Cmnpam
 func (c *Client) UpdateGroup(groupID string, group *Group) (deploymentID, version string, err error) {
+	return c.UpdateGroupWithParams(groupID, group, false)
+}
+
+// UpdateGroupWithParams change parameters of a deployed application group with paramters
+// http://goo.gl/Cmnpam
+func (c *Client) UpdateGroupWithParams(groupID string, group *Group, force bool) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("groups/%s", groupID),
 		Datas:  group,
 		Method: "PUT",
+		Params: &Parameters{Force: force},
 	}
 	resp := &response{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
