@@ -248,6 +248,9 @@ type HealthCheckEvent struct {
 	AppID       string       `json:"appId,omitempty"`
 	TaskID      string       `json:"taskId,omitempty"`
 	Version     string       `json:"version,omitempty"`
+	Reason      string       `json:"reason,omitempty"`
+	Host        string       `json:"host,omitempty"`
+	SlaveID     string       `json:"slaveId,omitempty"`
 	Alive       bool         `json:"alive,omitempty"`
 	HealthCheck *HealthCheck `json:"healthCheck,omitempty"`
 }
