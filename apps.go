@@ -169,9 +169,16 @@ func (c *Client) RestartAllTasksWithParams(appID string, force bool) (deployment
 // DestroyApp destroy an application
 // http://goo.gl/70pGRO
 func (c *Client) DestroyApp(appID string) (deploymentID, version string, err error) {
+	return c.DestroyAppWithParams(appID, false)
+}
+
+// DestroyAppWithParams destroy an application
+// http://goo.gl/70pGRO
+func (c *Client) DestroyAppWithParams(appID string, force bool) (deploymentID, version string, err error) {
 	options := &RequestOptions{
 		Path:   fmt.Sprintf("apps/%s", appID),
 		Method: "DELETE",
+		Params: &Parameters{Force: force},
 	}
 	resp := &response{}
 	err = c.unmarshalJSON(options, []int{http.StatusOK}, resp)
