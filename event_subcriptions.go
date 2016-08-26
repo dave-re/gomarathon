@@ -6,8 +6,8 @@ import (
 
 // EventResponse represents response for event subscriptions API
 type EventResponse struct {
-	CallbackUrl string `json:"callbackUrl,omitempty"`
-	ClientIp    string `json:"clientIp,omitempty"`
+	CallbackURL string `json:"callbackUrl,omitempty"`
+	ClientIP    string `json:"clientIp,omitempty"`
 	EventType   string `json:"eventType,omitempty"`
 }
 

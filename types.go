@@ -141,6 +141,14 @@ type Action struct {
 	App    string `json:"app,omitempty"`
 }
 
+// GetType returns an action type for compatibility marthon version v1.1.2
+func (a Action) GetType() string {
+	if a.Type != "" {
+		return a.Type
+	}
+	return a.Action
+}
+
 // TaskQueue is Action for queue
 type TaskQueue struct {
 	App   *Application `json:"app,omitempty"`
@@ -269,6 +277,7 @@ type DeploymentsEvent struct {
 	CurrentStep *Step           `json:"currentStep,omitempty"`
 }
 
+// DeploymentPlan is deployment plan
 type DeploymentPlan struct {
 	ID       string  `json:"id,omitempty"`
 	Original *Group  `json:"original,omitempty"`

@@ -38,6 +38,7 @@ func init() {
 	}
 }
 
+// MarshalJSON marshal to JSON
 func (r AppStatus) MarshalJSON() ([]byte, error) {
 	if s, ok := interface{}(r).(fmt.Stringer); ok {
 		return json.Marshal(s.String())
@@ -49,6 +50,7 @@ func (r AppStatus) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s)
 }
 
+// UnmarshalJSON unmarshal from JSON
 func (r *AppStatus) UnmarshalJSON(data []byte) error {
 	var s string
 	if err := json.Unmarshal(data, &s); err != nil {

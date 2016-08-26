@@ -254,9 +254,9 @@ func (c *Client) FindDeployment(appID string) (deploymentID, version string, err
 
 	go func() {
 		time.Sleep(time.Second)
-		deployments, err := c.GetDeployments()
-		if err != nil {
-			doneCh <- err
+		deployments, inErr := c.GetDeployments()
+		if inErr != nil {
+			doneCh <- inErr
 			return
 		}
 
