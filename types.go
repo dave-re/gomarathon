@@ -122,7 +122,7 @@ type Volume struct {
 type Deployment struct {
 	ID             string    `json:"id,omitempty"`
 	AffectedApps   []string  `json:"affectedApps,omitempty"`
-	Steps          []*Step   `json:"steps,omitempty"`
+	Steps          [][]*Step `json:"steps,omitempty"`
 	CurrentActions []*Action `json:"currentActions,omitempty"`
 	Version        string    `json:"version,omitempty"`
 	CurrentStep    int       `json:"currentStep,omitempty"`
